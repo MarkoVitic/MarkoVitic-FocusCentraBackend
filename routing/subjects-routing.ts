@@ -11,5 +11,8 @@ subjetsRute
   .get(subjectsControllers.getSubjectById)
   .delete(subjectsControllers.deleteSubject)
   .put(subjectsControllers.updateSubject);
+subjetsRute
+  .route("/subjetsall")
+  .get(subjectsControllers.getAllSubjetsWithProfessors);
 
 export default subjetsRute;

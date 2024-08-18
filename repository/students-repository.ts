@@ -12,6 +12,34 @@ const getAllStudents = async () => {
   }
 };
 
+const getAllStudentsWithSubjectName = async () => {
+  try {
+    const query = await dbConnection.query(`
+      SELECT 
+        u.idUcenik,
+        u.ImePrezimeUcenika,
+        u.ocjenaJedan,
+        u.ocjenaDva,
+        u.ocjenaTri,
+        u.ocjenaCetiri,
+        u.ukupnoPlacenoDoSada,
+        u.idPredmet,
+         pr.nazivPredmeta
+       
+        
+      FROM 
+        ucenici u
+      LEFT JOIN 
+        predmeti pr
+      ON
+        pr.idPredmet =u.idPredmet;
+    `);
+    return query;
+  } catch (err: any) {
+    return err;
+  }
+};
+
 // Function to get a single student by ID
 const getStudentById = async (idUcenik: number) => {
   const query = "SELECT * FROM ucenici WHERE idUcenik = ?";
@@ -138,4 +166,5 @@ export default {
   createStudent,
   updateStudent,
   deleteStudent,
+  getAllStudentsWithSubjectName,
 };

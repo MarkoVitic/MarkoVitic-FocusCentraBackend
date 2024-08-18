@@ -12,6 +12,35 @@ const getAllSubjects = async () => {
   }
 };
 
+//Get all Subjects with Professors
+const getAllSubjetsWithProfessors = async () => {
+  try {
+    const query = await dbConnection.query(`
+     SELECT 
+        pr.idPredmet,
+        pr.nazivPredmeta,
+        pr.cijenaPrograma,
+        pr.popustPrograma,
+        pr.ukupnaCijenaPrograma,
+        pr.kreirano,
+        pr.azurirano,
+        pr.idProfesor,
+         p.ImePrezimeProfesor
+       
+        
+      FROM 
+        profesori p
+      RIGHT JOIN 
+        predmeti pr
+      ON
+        p.idProfesor =pr.idProfesor;
+    `);
+    return query;
+  } catch (err: any) {
+    return err;
+  }
+};
+
 // Function to get a single subject by ID
 const getSubjectById = async (idPredmet: number) => {
   const query = "SELECT * FROM predmeti WHERE idPredmet = ?";
@@ -113,4 +142,5 @@ export default {
   createSubject,
   updateSubject,
   deleteSubject,
+  getAllSubjetsWithProfessors,
 };

@@ -13,6 +13,18 @@ const getAllStudents = async () => {
   }
 };
 
+const getAllStudentsWithSubjectName = async () => {
+  try {
+    const students = await studentsRepository.getAllStudentsWithSubjectName();
+    return students;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error retrieving students: ${err.message}`,
+    };
+  }
+};
+
 // Service to get a single student by ID
 const getStudentById = async (idUcenik: number) => {
   try {
@@ -96,4 +108,5 @@ export default {
   createStudent,
   updateStudent,
   deleteStudent,
+  getAllStudentsWithSubjectName,
 };

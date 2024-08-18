@@ -13,6 +13,31 @@ const getAllSubjects = async () => {
   }
 };
 
+const getAllStudentsWithSubjectId = async () => {
+  try {
+    const subjects = await subjectRepository.getAllSubjetsWithProfessors();
+
+    return subjects;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error retrieving subjects: ${err.message}`,
+    };
+  }
+};
+
+const getAllSubjetsWithProfessors = async () => {
+  try {
+    const allSubjets = await subjectRepository.getAllSubjetsWithProfessors();
+    return allSubjets;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error retrieving subjects: ${err.message}`,
+    };
+  }
+};
+
 // Service to get a single subject by ID
 const getSubjectById = async (idPredmet: number) => {
   try {
@@ -107,4 +132,5 @@ export default {
   createSubject,
   updateSubject,
   deleteSubject,
+  getAllSubjetsWithProfessors,
 };

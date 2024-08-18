@@ -9,7 +9,7 @@ const getAllProfessors = async (req: Request, res: Response) => {
 //Get All professors with Subjects
 const getAllProfessorsWithSubjects = async (req: Request, res: Response) => {
   const allProfessros = await professorsService.getAllProfessorsWithSubjects();
-  console.log(allProfessros);
+
   res.send(allProfessros);
 };
 

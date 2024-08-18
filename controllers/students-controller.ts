@@ -5,7 +5,6 @@ import studentsService from "../service/students-service";
 const getAllStudents = async (req: Request, res: Response) => {
   try {
     const result = await studentsService.getAllStudents();
-    console.log(result);
 
     if (result.success) {
       res.status(200).json(result); // 200 OK
@@ -21,11 +20,25 @@ const getAllStudents = async (req: Request, res: Response) => {
   }
 };
 
+const getAllStudentsWithSubjectName = async (req: Request, res: Response) => {
+  try {
+    const result = await studentsService.getAllStudentsWithSubjectName();
+
+    res.send(result);
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
 // Controller to get a single student by ID
 const getStudentById = async (req: Request, res: Response) => {
   try {
     const idUcenik = req.params.id;
-    console.log(idUcenik);
+
     const result = await studentsService.getStudentById(Number(idUcenik));
 
     if (result.success) {
@@ -112,4 +125,5 @@ export default {
   createStudent,
   updateStudent,
   deleteStudent,
+  getAllStudentsWithSubjectName,
 };

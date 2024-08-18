@@ -20,6 +20,19 @@ const getAllSubjects = async (req: Request, res: Response) => {
   }
 };
 
+const getAllSubjetsWithProfessors = async (req: Request, res: Response) => {
+  try {
+    const result = await subjectService.getAllSubjetsWithProfessors();
+    res.send(result);
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
 // Controller to get a single subject by ID
 const getSubjectById = async (req: Request, res: Response) => {
   try {
@@ -110,4 +123,5 @@ export default {
   createSubject,
   updateSubject,
   deleteSubject,
+  getAllSubjetsWithProfessors,
 };

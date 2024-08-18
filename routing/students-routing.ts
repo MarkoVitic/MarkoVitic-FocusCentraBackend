@@ -11,5 +11,8 @@ studetsRute
   .get(studentsControllers.getStudentById)
   .delete(studentsControllers.deleteStudent)
   .put(studentsControllers.updateStudent);
+studetsRute
+  .route("/studentsall")
+  .get(studentsControllers.getAllStudentsWithSubjectName);
 
 export default studetsRute;
