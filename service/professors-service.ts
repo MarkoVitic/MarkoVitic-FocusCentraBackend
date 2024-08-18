@@ -7,6 +7,13 @@ const getAllProfessors = async () => {
   return allProfessors;
 };
 
+//Get All with Subjects
+const getAllProfessorsWithSubjects = async () => {
+  const allProfessors =
+    await professorsRepositori.getAllProfessorsWithSubjects();
+  return allProfessors;
+};
+
 const getProfessorById = async (idProfessor: number) => {
   const professor = await professorsRepository.getProfessorById(idProfessor);
 
@@ -82,4 +89,5 @@ export default {
   createProfessor,
   updateProfessor,
   deleteProfessor,
+  getAllProfessorsWithSubjects,
 };

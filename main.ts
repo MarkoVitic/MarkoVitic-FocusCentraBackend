@@ -6,8 +6,10 @@ import { dbConnection } from "./common/db-conection";
 import subjetsRute from "./routing/subjects-routing";
 import studetsRute from "./routing/students-routing";
 import paymentsRute from "./routing/payments-routing";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use(profesoriRute);

@@ -5,6 +5,7 @@ import studentsService from "../service/students-service";
 const getAllStudents = async (req: Request, res: Response) => {
   try {
     const result = await studentsService.getAllStudents();
+    console.log(result);
 
     if (result.success) {
       res.status(200).json(result); // 200 OK

@@ -25,6 +25,34 @@ const getProfessorById = async (idProfesor: number) => {
   }
 };
 
+//Get all profesors with Subjcet
+const getAllProfessorsWithSubjects = async () => {
+  try {
+    const query = await dbConnection.query(`
+      SELECT 
+        p.idProfesor,
+        p.ImePrezimeProfesor,
+        p.kontaktProfesor,
+        p.emailProfesor,
+        p.adresaProfesor,
+        p.procenatProfesor,
+        p.prihodMjesecniProfesor,
+        p.prihodUkupni,
+        pr.idPredmet,
+        pr.nazivPredmeta
+      FROM 
+        profesori p
+      LEFT JOIN 
+        predmeti pr
+      ON
+        p.idProfesor =pr.idProfesor;
+    `);
+    return query;
+  } catch (err: any) {
+    return err;
+  }
+};
+
 // Function to create a new professor
 const createProfessor = async (professorData: any) => {
   const {
@@ -37,8 +65,8 @@ const createProfessor = async (professorData: any) => {
 
   const query = `
     INSERT INTO profesori 
-    (ImePrezimeProfesor, kontaktProfesor, emailProfesor, adresaProfesor, procenatProfesor) 
-    VALUES (?, ?, ?, ?, ?)
+    (ImePrezimeProfesor, kontaktProfesor, emailProfesor, adresaProfesor, procenatProfesor, kreirano, azurirano) 
+    VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `;
 
   const values = [
@@ -65,8 +93,6 @@ const updateProfessor = async (idProfessor: number, professorData: any) => {
     emailProfesor,
     adresaProfesor,
     procenatProfesor,
-    prihodMjesecniProfesor,
-    prihodUkupni,
   } = professorData;
 
   const query = `
@@ -77,8 +103,7 @@ const updateProfessor = async (idProfessor: number, professorData: any) => {
       emailProfesor = ?, 
       adresaProfesor = ?, 
       procenatProfesor = ?, 
-      prihodMjesecniProfesor = ?, 
-      prihodUkupni = ?, 
+      
       azurirano = CURRENT_TIMESTAMP
     WHERE idProfesor = ?
   `;
@@ -89,8 +114,7 @@ const updateProfessor = async (idProfessor: number, professorData: any) => {
     emailProfesor,
     adresaProfesor,
     procenatProfesor,
-    prihodMjesecniProfesor,
-    prihodUkupni,
+
     idProfessor,
   ];
 
@@ -120,4 +144,5 @@ export default {
   createProfessor,
   updateProfessor,
   deleteProfessor,
+  getAllProfessorsWithSubjects,
 };

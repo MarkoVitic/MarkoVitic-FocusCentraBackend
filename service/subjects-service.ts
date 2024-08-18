@@ -34,6 +34,11 @@ const getSubjectById = async (idPredmet: number) => {
 // Service to create a new subject
 const createSubject = async (subjectData: any) => {
   try {
+    let cijenaPrograma: number = parseInt(subjectData.cijenaPrograma);
+    let popustPrograma: number = parseInt(subjectData.popustPrograma);
+    let ukCijena: number =
+      cijenaPrograma - (cijenaPrograma * popustPrograma) / 100;
+    subjectData.ukupnaCijenaPrograma = ukCijena;
     const newSubjectId = await subjectRepository.createSubject(subjectData);
     return {
       success: true,
@@ -51,6 +56,12 @@ const createSubject = async (subjectData: any) => {
 // Service to update an existing subject
 const updateSubject = async (idPredmet: number, subjectData: any) => {
   try {
+    console.log(subjectData);
+    let cijenaPrograma: number = parseInt(subjectData.cijenaPrograma);
+    let popustPrograma: number = parseInt(subjectData.popustPrograma);
+    let ukCijena: number =
+      cijenaPrograma - (cijenaPrograma * popustPrograma) / 100;
+    subjectData.ukupnaCijenaPrograma = ukCijena;
     const affectedRows = await subjectRepository.updateSubject(
       idPredmet,
       subjectData

@@ -12,5 +12,8 @@ profesoriRute
   .get(professorsControllers.getProfessorById)
   .put(professorsControllers.updateProfessor)
   .delete(professorsControllers.deleteProfessor);
+profesoriRute
+  .route("/professorsall")
+  .get(professorsControllers.getAllProfessorsWithSubjects);
 
 export default profesoriRute;

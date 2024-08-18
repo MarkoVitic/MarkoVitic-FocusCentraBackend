@@ -6,6 +6,13 @@ const getAllProfessors = async (req: Request, res: Response) => {
   res.send(allProfessors);
 };
 
+//Get All professors with Subjects
+const getAllProfessorsWithSubjects = async (req: Request, res: Response) => {
+  const allProfessros = await professorsService.getAllProfessorsWithSubjects();
+  console.log(allProfessros);
+  res.send(allProfessros);
+};
+
 const getProfessorById = async (req: Request, res: Response) => {
   try {
     const idProfesor = req.params.id;
@@ -51,6 +58,7 @@ const updateProfessor = async (req: Request, res: Response) => {
   try {
     const idProfessor = req.params.id;
     const professorData = req.body;
+
     const result = await professorsService.updateProfessor(
       parseInt(idProfessor),
       professorData
@@ -98,4 +106,5 @@ export default {
   createProfessor,
   updateProfessor,
   deleteProfessor,
+  getAllProfessorsWithSubjects,
 };

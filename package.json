@@ -18,10 +18,12 @@
   },
   "homepage": "https://github.com/MarkoVitic/FocusCentraBackend#readme",
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.2.0",
     "@types/nodemon": "^1.19.6",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
     "mysql": "^2.18.1",
