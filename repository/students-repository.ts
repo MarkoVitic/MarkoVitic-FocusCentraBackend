@@ -24,7 +24,9 @@ const getAllStudentsWithSubjectName = async () => {
         u.ocjenaCetiri,
         u.ukupnoPlacenoDoSada,
         u.idPredmet,
+        u.popust,
          pr.nazivPredmeta
+         
        
         
       FROM 

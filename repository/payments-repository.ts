@@ -26,29 +26,15 @@ const getPaymentById = async (idPlacanje: number) => {
 
 // Function to create a new payment
 const createPayment = async (paymentData: any) => {
-  const {
-    bazicnaCijenaPrograma,
-    popustPoUceniku,
-    finalnaCijenaPrograma,
-    mjesecnoPlacanje,
-    idUcenik,
-    idPredmet,
-  } = paymentData;
+  const { iznosUplate, kreirano, azurirano, idUcenik, idPredmet } = paymentData;
 
   const query = `
     INSERT INTO placanja 
-    (bazicnaCijenaPrograma, popustPoUceniku, finalnaCijenaPrograma, mjesecnoPlacanje, idUcenik, idPredmet) 
-    VALUES (?, ?, ?, ?, ?, ?)
+    (   iznosUplate, kreirano, azurirano, idUcenik, idPredmet) 
+    VALUES (?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)
   `;
 
-  const values = [
-    bazicnaCijenaPrograma,
-    popustPoUceniku,
-    finalnaCijenaPrograma,
-    mjesecnoPlacanje,
-    idUcenik,
-    idPredmet,
-  ];
+  const values = [iznosUplate, idUcenik, idPredmet, kreirano, azurirano];
 
   try {
     const result = await dbConnection.query(query, values);
@@ -60,37 +46,20 @@ const createPayment = async (paymentData: any) => {
 
 // Function to update an existing payment
 const updatePayment = async (idPlacanje: number, paymentData: any) => {
-  const {
-    bazicnaCijenaPrograma,
-    popustPoUceniku,
-    finalnaCijenaPrograma,
-    mjesecnoPlacanje,
-    idUcenik,
-    idPredmet,
-  } = paymentData;
+  const { iznosUplate, azurirano, idUcenik, idPredmet } = paymentData;
 
   const query = `
     UPDATE placanja 
     SET 
-      bazicnaCijenaPrograma = ?, 
-      popustPoUceniku = ?, 
-      finalnaCijenaPrograma = ?, 
-      mjesecnoPlacanje = ?, 
+      
+      iznosUplate = ?, 
       idUcenik = ?, 
       idPredmet = ?, 
       azurirano = CURRENT_TIMESTAMP
     WHERE idPlacanje = ?
   `;
 
-  const values = [
-    bazicnaCijenaPrograma,
-    popustPoUceniku,
-    finalnaCijenaPrograma,
-    mjesecnoPlacanje,
-    idUcenik,
-    idPredmet,
-    idPlacanje,
-  ];
+  const values = [iznosUplate, idUcenik, idPredmet, idPlacanje, azurirano];
 
   try {
     const result = await dbConnection.query(query, values);

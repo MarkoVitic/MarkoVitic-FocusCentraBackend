@@ -44,6 +44,7 @@ const getPaymentById = async (req: Request, res: Response) => {
 const createPayment = async (req: Request, res: Response) => {
   try {
     const paymentData = req.body;
+
     const result = await paymentsService.createPayment(paymentData);
 
     if (result.success) {
@@ -65,6 +66,8 @@ const updatePayment = async (req: Request, res: Response) => {
   try {
     const idPlacanje = req.params.id;
     const paymentData = req.body;
+    console.log(idPlacanje);
+    console.log(paymentData);
     const result = await paymentsService.updatePayment(
       Number(idPlacanje),
       paymentData
