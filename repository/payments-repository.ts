@@ -1,12 +1,17 @@
 import { dbConnection } from "../common/db-conection"; // Import your database connection module
 
-// Function to get all payments
+// Function to retrieve payments with additional data
 const getAllPayments = async () => {
-  const query = "SELECT * FROM placanja";
+  const query = `
+     select p.*, u.ImePrezimeUcenika, pr.nazivPredmeta
+    from placanja p, ucenici u, predmeti pr
+    where p.idUcenik=u.idUcenik and p.idPredmet=u.idPredmet
+    and u.idPredmet=pr.idPredmet ;
+  `; // Bind the start and end date for the query
 
   try {
     const payments = await dbConnection.query(query);
-    return payments; // Return all records
+    return payments; // Return the retrieved records
   } catch (err: any) {
     throw new Error(`Error retrieving payments: ${err.message}`);
   }
