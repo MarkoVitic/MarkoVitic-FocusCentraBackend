@@ -83,6 +83,24 @@ const deleteProfessor = async (idProfessor: number) => {
   }
 };
 
+const inserIntoMonthPlacanja = async (
+  idProfesor: number,
+  mjescniPrihod: number
+) => {
+  try {
+    const data = await professorsRepository.inserIntoMonthPlacanja(
+      idProfesor,
+      mjescniPrihod
+    );
+    return data;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Cannot add month earning for profesor: ${err.message}`,
+    };
+  }
+};
+
 export default {
   getAllProfessors,
   getProfessorById,
@@ -90,4 +108,5 @@ export default {
   updateProfessor,
   deleteProfessor,
   getAllProfessorsWithSubjects,
+  inserIntoMonthPlacanja,
 };

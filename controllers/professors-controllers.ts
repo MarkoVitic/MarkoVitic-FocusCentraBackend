@@ -100,6 +100,23 @@ const deleteProfessor = async (req: Request, res: Response) => {
   }
 };
 
+const inserIntoMonthPlacanja = async (
+  idProfesor: number,
+  mjescniPrihod: number
+) => {
+  try {
+    console.log(idProfesor, mjescniPrihod + "=========");
+    const data = await professorsService.inserIntoMonthPlacanja(
+      idProfesor,
+      mjescniPrihod
+    );
+    console.log(data);
+    return data;
+  } catch (err: any) {
+    return err;
+  }
+};
+
 export default {
   getAllProfessors,
   getProfessorById,
@@ -107,4 +124,5 @@ export default {
   updateProfessor,
   deleteProfessor,
   getAllProfessorsWithSubjects,
+  inserIntoMonthPlacanja,
 };

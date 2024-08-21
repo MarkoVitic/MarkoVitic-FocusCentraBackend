@@ -35,6 +35,7 @@ const getPaymentById = async (idPlacanje: number) => {
 const createPayment = async (paymentData: any) => {
   try {
     const newPaymentId = await paymentsRepository.createPayment(paymentData);
+
     return {
       success: true,
       id: newPaymentId,
@@ -90,10 +91,30 @@ const deletePayment = async (idPlacanje: number) => {
   }
 };
 
+const getSumForMonthProfesor = async (
+  idPredmet: number,
+  idProfesor: number
+) => {
+  try {
+    const getSumMonth = await paymentsRepository.getSumForMonthProfesor(
+      idPredmet,
+      idProfesor
+    );
+
+    return getSumMonth;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error deleting payment: ${err.message}`,
+    };
+  }
+};
+
 export default {
   getAllPayments,
   getPaymentById,
   createPayment,
   updatePayment,
   deletePayment,
+  getSumForMonthProfesor,
 };

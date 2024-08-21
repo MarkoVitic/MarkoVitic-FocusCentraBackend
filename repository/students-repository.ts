@@ -67,12 +67,13 @@ const createStudent = async (studentData: any) => {
     ocjenaCetiri,
     idPredmet,
     ukupnoPlacenoDoSada,
+    popust,
   } = studentData;
 
   const query = `
     INSERT INTO ucenici 
-    (ImePrezimeUcenika, ImeRoditelja, kontaktRoditelja, emailRoditelja, ocjenaJedan, ocjenaDva, ocjenaTri, ocjenaCetiri, idPredmet, ukupnoPlacenoDoSada) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (ImePrezimeUcenika, ImeRoditelja, kontaktRoditelja, emailRoditelja, ocjenaJedan, ocjenaDva, ocjenaTri, ocjenaCetiri, idPredmet, ukupnoPlacenoDoSada,popust,kreirano, azurirano) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)
   `;
 
   const values = [
@@ -86,6 +87,7 @@ const createStudent = async (studentData: any) => {
     ocjenaCetiri,
     idPredmet,
     ukupnoPlacenoDoSada,
+    popust,
   ];
 
   try {

@@ -31,15 +31,16 @@ const getPaymentById = async (idPlacanje: number) => {
 
 // Function to create a new payment
 const createPayment = async (paymentData: any) => {
-  const { iznosUplate, kreirano, azurirano, idUcenik, idPredmet } = paymentData;
+  const { iznosUplate, kreirano, azurirano, idUcenik, idPredmet, idProfesor } =
+    paymentData;
 
   const query = `
     INSERT INTO placanja 
-    (   iznosUplate, kreirano, azurirano, idUcenik, idPredmet) 
-    VALUES (?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)
+    (   iznosUplate, kreirano, azurirano, idUcenik, idPredmet,idProfesor) 
+    VALUES (?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?, ?)
   `;
 
-  const values = [iznosUplate, idUcenik, idPredmet, kreirano, azurirano];
+  const values = [iznosUplate, idUcenik, idPredmet, idProfesor];
 
   try {
     const result = await dbConnection.query(query, values);
@@ -49,9 +50,28 @@ const createPayment = async (paymentData: any) => {
   }
 };
 
+const getSumForMonthProfesor = async (
+  idPredmet: number,
+  idProfesor: number
+) => {
+  try {
+    const sumFromMonth = await dbConnection.query(
+      ` SELECT idProfesor, SUM(iznosUplate) AS prihodMjesecniProfesor
+  FROM placanja
+  WHERE idPredmet = ? and idProfesor = ?
+  GROUP BY idProfesor;`,
+      [idPredmet, idProfesor]
+    );
+
+    return sumFromMonth;
+  } catch (err) {
+    return { success: false, msg: err };
+  }
+};
+
 // Function to update an existing payment
 const updatePayment = async (idPlacanje: number, paymentData: any) => {
-  const { iznosUplate, azurirano, idUcenik, idPredmet } = paymentData;
+  const { iznosUplate, idUcenik, idPredmet } = paymentData;
 
   const query = `
     UPDATE placanja 
@@ -64,7 +84,7 @@ const updatePayment = async (idPlacanje: number, paymentData: any) => {
     WHERE idPlacanje = ?
   `;
 
-  const values = [iznosUplate, idUcenik, idPredmet, idPlacanje, azurirano];
+  const values = [iznosUplate, idUcenik, idPredmet, idPlacanje];
 
   try {
     const result = await dbConnection.query(query, values);
@@ -92,4 +112,5 @@ export default {
   createPayment,
   updatePayment,
   deletePayment,
+  getSumForMonthProfesor,
 };

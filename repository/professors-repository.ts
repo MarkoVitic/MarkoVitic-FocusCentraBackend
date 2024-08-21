@@ -138,6 +138,25 @@ const deleteProfessor = async (idProfessor: number) => {
   }
 };
 
+// Sluzi sa update klone koliko profesor treba da prili za trenutni mjesec
+
+const inserIntoMonthPlacanja = async (
+  idProfesor: number,
+  mjescniPrihod: number
+) => {
+  try {
+    const query = await dbConnection.query(
+      `UPDATE profesori 
+      SET prihodMjesecniProfesor = ? 
+      WHERE idProfesor = ?`,
+      [mjescniPrihod, idProfesor]
+    );
+    return query;
+  } catch (err: any) {
+    throw new Error(`Error deleting professor: ${err.message}`);
+  }
+};
+
 export default {
   getAllProfessors,
   getProfessorById,
@@ -145,4 +164,5 @@ export default {
   updateProfessor,
   deleteProfessor,
   getAllProfessorsWithSubjects,
+  inserIntoMonthPlacanja,
 };

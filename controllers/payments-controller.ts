@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import paymentsService from "../service/payments-service";
+import professorsControllers from "./professors-controllers";
 
 // Controller to get all payments
 const getAllPayments = async (req: Request, res: Response) => {
@@ -46,6 +47,9 @@ const createPayment = async (req: Request, res: Response) => {
     const paymentData = req.body;
 
     const result = await paymentsService.createPayment(paymentData);
+
+    // Pozivanje f-je za racunanje procenta profesora za trenutni mjesec
+    getSumForMonthProfesor(paymentData.idPredmet, paymentData.idProfesor);
 
     if (result.success) {
       res.status(201).json(result); // 201 Created
@@ -104,6 +108,30 @@ const deletePayment = async (req: Request, res: Response) => {
       message: "Internal Server Error",
       error: err.message,
     });
+  }
+};
+
+const getSumForMonthProfesor = async (
+  idPredmet: number,
+  idProfesor: number
+) => {
+  try {
+    const sumMntfProfesor = await paymentsService.getSumForMonthProfesor(
+      idPredmet,
+      idProfesor
+    );
+
+    professorsControllers.inserIntoMonthPlacanja(
+      sumMntfProfesor[0].idProfesor,
+      parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
+    );
+    console.log(sumMntfProfesor[0].idProfesor);
+  } catch (err: any) {
+    return {
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    };
   }
 };
 

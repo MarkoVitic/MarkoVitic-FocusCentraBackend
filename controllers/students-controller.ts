@@ -59,7 +59,23 @@ const getStudentById = async (req: Request, res: Response) => {
 const createStudent = async (req: Request, res: Response) => {
   try {
     const studentData = req.body;
-    const result = await studentsService.createStudent(studentData);
+    let newData = {
+      ImePrezimeUcenika: studentData.ImePrezimeUcenika,
+      ImeRoditelja: studentData.ImeRoditelja,
+      kontaktRoditelja: studentData.kontaktRoditelja,
+      emailRoditelja: studentData.emailRoditelja,
+      ocjenaJedan: !studentData.ocjenaJedan ? 0 : studentData.ocjenaJedan,
+      ocjenaDva: !studentData.ocjenaDva ? 0 : studentData.ocjenaDva,
+      ocjenaTri: !studentData.ocjenaTri ? 0 : studentData.ocjenaTri,
+      ocjenaCetiri: !studentData.ocjenaCetiri ? 0 : studentData.ocjenaCetiri,
+      idPredmet: parseInt(studentData.idPredmet),
+      ukupnoPlacenoDoSada: !studentData.ukupnoPlacenoDoSada
+        ? 0
+        : studentData.ukupnoPlacenoDoSada,
+      popust: !studentData.popust ? 0 : studentData.popust,
+    };
+
+    const result = await studentsService.createStudent(newData);
 
     if (result.success) {
       res.status(201).json(result); // 201 Created
