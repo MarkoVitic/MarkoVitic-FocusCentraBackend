@@ -151,6 +151,16 @@ const deleteStudent = async (req: Request, res: Response) => {
   }
 };
 
+const inertIntoStudentTotalPayments = async (ukupnaSuma: any) => {
+  try {
+    const sumOfAllStudentPayments =
+      await studentsService.inertIntoStudentTotalPayments(ukupnaSuma);
+    return sumOfAllStudentPayments;
+  } catch (err: any) {
+    return err;
+  }
+};
+
 export default {
   getAllStudents,
   getStudentById,
@@ -158,4 +168,5 @@ export default {
   updateStudent,
   deleteStudent,
   getAllStudentsWithSubjectName,
+  inertIntoStudentTotalPayments,
 };

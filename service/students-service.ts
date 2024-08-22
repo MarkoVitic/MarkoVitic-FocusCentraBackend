@@ -102,6 +102,19 @@ const deleteStudent = async (idUcenik: number) => {
   }
 };
 
+const inertIntoStudentTotalPayments = async (ukupnaSuma: any) => {
+  try {
+    const sumOfAllStudentPayments =
+      await studentsRepository.inertIntoStudentTotalPayments(ukupnaSuma);
+    return sumOfAllStudentPayments;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error all payments by student: ${err.message}`,
+    };
+  }
+};
+
 export default {
   getAllStudents,
   getStudentById,
@@ -109,4 +122,5 @@ export default {
   updateStudent,
   deleteStudent,
   getAllStudentsWithSubjectName,
+  inertIntoStudentTotalPayments,
 };

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import paymentsService from "../service/payments-service";
 import professorsControllers from "./professors-controllers";
+import studentsController from "./students-controller";
 
 // Controller to get all payments
 const getAllPayments = async (req: Request, res: Response) => {
@@ -53,6 +54,9 @@ const createPayment = async (req: Request, res: Response) => {
 
     //Pozivanje f-je i razunanje za ukupnu sumu i upisuje u prof tableu
     getSumForProfesor(paymentData.idPredmet, paymentData.idProfesor);
+
+    //Pozivanje f-je za racunaje svih upalta Ucenika Za odgovarajuci predmet
+    getSumForStudentPayments(paymentData.idUcenik, paymentData.idPredmet);
 
     if (result.success) {
       res.status(201).json(result); // 201 Created
@@ -149,6 +153,27 @@ const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
       parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
     );
     console.log(sumMntfProfesor[0].idProfesor);
+  } catch (err: any) {
+    return {
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    };
+  }
+};
+
+const getSumForStudentPayments = async (
+  idUcenik: number,
+  idPredmet: number
+) => {
+  try {
+    const sumForStudentPayments =
+      await paymentsService.getSumForStudentPayments(idUcenik, idPredmet);
+
+    console.log(sumForStudentPayments[0]);
+    return studentsController.inertIntoStudentTotalPayments(
+      sumForStudentPayments[0]
+    );
   } catch (err: any) {
     return {
       success: false,

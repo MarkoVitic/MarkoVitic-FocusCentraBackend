@@ -126,6 +126,22 @@ const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
   }
 };
 
+const getSumForStudentPayments = async (
+  idUcenik: number,
+  idPredmet: number
+) => {
+  try {
+    const sumForStudentPayments =
+      await paymentsRepository.getSumForStudentPayments(idUcenik, idPredmet);
+    return sumForStudentPayments;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error deleting payment: ${err.message}`,
+    };
+  }
+};
+
 export default {
   getAllPayments,
   getPaymentById,
@@ -134,4 +150,5 @@ export default {
   deletePayment,
   getSumForMonthProfesor,
   getSumForProfesor,
+  getSumForStudentPayments,
 };

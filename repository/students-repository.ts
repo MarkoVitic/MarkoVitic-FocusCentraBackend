@@ -169,6 +169,21 @@ const deleteStudent = async (idUcenik: number) => {
   }
 };
 
+const inertIntoStudentTotalPayments = async (ukupnaSuma: any) => {
+  try {
+    const sumOfAllStudentPayments = await dbConnection.query(
+      `
+      UPDATE ucenici 
+        SET ukupnoPlacenoDoSada = ? 
+        WHERE idUcenik = ? AND idPredmet = ? `,
+      [ukupnaSuma.sveUplateUcenika, ukupnaSuma.idUcenik, ukupnaSuma.idPredmet]
+    );
+    return sumOfAllStudentPayments;
+  } catch (err: any) {
+    throw new Error(`Error deleting student: ${err.message}`);
+  }
+};
+
 export default {
   getAllStudents,
   getStudentById,
@@ -176,4 +191,5 @@ export default {
   updateStudent,
   deleteStudent,
   getAllStudentsWithSubjectName,
+  inertIntoStudentTotalPayments,
 };

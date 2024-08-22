@@ -88,6 +88,25 @@ const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
   }
 };
 
+const getSumForStudentPayments = async (
+  idUcenik: number,
+  idPredmet: number
+) => {
+  try {
+    const sumForStudentPayments = await dbConnection.query(
+      `
+      SELECT idUcenik, idPredmet, SUM(iznosUplate) AS sveUplateUcenika
+  FROM placanja
+  WHERE idUcenik = ? and idPredmet = ?
+  GROUP BY idUcenik;`,
+      [idUcenik, idPredmet]
+    );
+    return sumForStudentPayments;
+  } catch (err: any) {
+    return { success: false, msg: err };
+  }
+};
+
 // Function to update an existing payment
 const updatePayment = async (idPlacanje: number, paymentData: any) => {
   const { iznosUplate, idUcenik, idPredmet } = paymentData;
@@ -133,4 +152,5 @@ export default {
   deletePayment,
   getSumForMonthProfesor,
   getSumForProfesor,
+  getSumForStudentPayments,
 };
