@@ -116,6 +116,22 @@ const inserIntoMonthPlacanja = async (
     return err;
   }
 };
+const inserAllSumIntoPlacanja = async (
+  idProfesor: number,
+  ukupniPrihod: number
+) => {
+  try {
+    console.log(idProfesor, ukupniPrihod + "=========");
+    const data = await professorsService.inserAllSumIntoPlacanja(
+      idProfesor,
+      ukupniPrihod
+    );
+    console.log(data);
+    return data;
+  } catch (err: any) {
+    return err;
+  }
+};
 
 export default {
   getAllProfessors,
@@ -125,4 +141,5 @@ export default {
   deleteProfessor,
   getAllProfessorsWithSubjects,
   inserIntoMonthPlacanja,
+  inserAllSumIntoPlacanja,
 };

@@ -51,6 +51,9 @@ const createPayment = async (req: Request, res: Response) => {
     // Pozivanje f-je za racunanje procenta profesora za trenutni mjesec
     getSumForMonthProfesor(paymentData.idPredmet, paymentData.idProfesor);
 
+    //Pozivanje f-je i razunanje za ukupnu sumu i upisuje u prof tableu
+    getSumForProfesor(paymentData.idPredmet, paymentData.idProfesor);
+
     if (result.success) {
       res.status(201).json(result); // 201 Created
     } else {
@@ -134,7 +137,26 @@ const getSumForMonthProfesor = async (
     };
   }
 };
+const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
+  try {
+    const sumMntfProfesor = await paymentsService.getSumForProfesor(
+      idPredmet,
+      idProfesor
+    );
 
+    professorsControllers.inserAllSumIntoPlacanja(
+      sumMntfProfesor[0].idProfesor,
+      parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
+    );
+    console.log(sumMntfProfesor[0].idProfesor);
+  } catch (err: any) {
+    return {
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    };
+  }
+};
 export default {
   getAllPayments,
   getPaymentById,

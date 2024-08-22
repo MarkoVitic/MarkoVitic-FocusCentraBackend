@@ -25,7 +25,9 @@ const getAllStudentsWithSubjectName = async () => {
         u.ukupnoPlacenoDoSada,
         u.idPredmet,
         u.popust,
-         pr.nazivPredmeta
+         pr.nazivPredmeta,
+           pr.ukupnaCijenaPrograma
+       
          
        
         
@@ -111,6 +113,7 @@ const updateStudent = async (idUcenik: number, studentData: any) => {
     ocjenaCetiri,
     idPredmet,
     ukupnoPlacenoDoSada,
+    popust,
   } = studentData;
 
   const query = `
@@ -126,6 +129,7 @@ const updateStudent = async (idUcenik: number, studentData: any) => {
       ocjenaCetiri = ?, 
       idPredmet = ?, 
       ukupnoPlacenoDoSada = ?, 
+      popust = ?,
       azurirano = CURRENT_TIMESTAMP
     WHERE idUcenik = ?
   `;
@@ -141,6 +145,7 @@ const updateStudent = async (idUcenik: number, studentData: any) => {
     ocjenaCetiri,
     idPredmet,
     ukupnoPlacenoDoSada,
+    popust,
     idUcenik,
   ];
 

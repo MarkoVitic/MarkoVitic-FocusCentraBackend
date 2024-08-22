@@ -148,8 +148,24 @@ const inserIntoMonthPlacanja = async (
     const query = await dbConnection.query(
       `UPDATE profesori 
       SET prihodMjesecniProfesor = ? 
-      WHERE idProfesor = ?`,
+      WHERE idProfesor = ? `,
       [mjescniPrihod, idProfesor]
+    );
+    return query;
+  } catch (err: any) {
+    throw new Error(`Error deleting professor: ${err.message}`);
+  }
+};
+const inserAllSumIntoPlacanja = async (
+  idProfesor: number,
+  ukupniPrihod: number
+) => {
+  try {
+    const query = await dbConnection.query(
+      `UPDATE profesori 
+      SET prihodUkupni = ? 
+      WHERE idProfesor = ?`,
+      [ukupniPrihod, idProfesor]
     );
     return query;
   } catch (err: any) {
@@ -165,4 +181,5 @@ export default {
   deleteProfessor,
   getAllProfessorsWithSubjects,
   inserIntoMonthPlacanja,
+  inserAllSumIntoPlacanja,
 };

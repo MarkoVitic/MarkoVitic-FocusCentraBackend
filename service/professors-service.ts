@@ -101,6 +101,24 @@ const inserIntoMonthPlacanja = async (
   }
 };
 
+const inserAllSumIntoPlacanja = async (
+  idProfesor: number,
+  ukupniPrihod: number
+) => {
+  try {
+    const data = await professorsRepository.inserAllSumIntoPlacanja(
+      idProfesor,
+      ukupniPrihod
+    );
+    return data;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Cannot add month earning for profesor: ${err.message}`,
+    };
+  }
+};
+
 export default {
   getAllProfessors,
   getProfessorById,
@@ -109,4 +127,5 @@ export default {
   deleteProfessor,
   getAllProfessorsWithSubjects,
   inserIntoMonthPlacanja,
+  inserAllSumIntoPlacanja,
 };

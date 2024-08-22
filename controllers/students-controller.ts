@@ -96,9 +96,25 @@ const updateStudent = async (req: Request, res: Response) => {
   try {
     const idUcenik = req.params.id;
     const studentData = req.body;
+
+    let newData = {
+      ImePrezimeUcenika: studentData.ImePrezimeUcenika,
+      ImeRoditelja: studentData.ImeRoditelja,
+      kontaktRoditelja: studentData.kontaktRoditelja,
+      emailRoditelja: studentData.emailRoditelja,
+      ocjenaJedan: !studentData.ocjenaJedan ? 0 : studentData.ocjenaJedan,
+      ocjenaDva: !studentData.ocjenaDva ? 0 : studentData.ocjenaDva,
+      ocjenaTri: !studentData.ocjenaTri ? 0 : studentData.ocjenaTri,
+      ocjenaCetiri: !studentData.ocjenaCetiri ? 0 : studentData.ocjenaCetiri,
+      idPredmet: parseInt(studentData.idPredmet),
+      ukupnoPlacenoDoSada: !studentData.ukupnoPlacenoDoSada
+        ? 0
+        : studentData.ukupnoPlacenoDoSada,
+      popust: !studentData.popust ? 0 : studentData.popust,
+    };
     const result = await studentsService.updateStudent(
       Number(idUcenik),
-      studentData
+      newData
     );
 
     if (result.success) {

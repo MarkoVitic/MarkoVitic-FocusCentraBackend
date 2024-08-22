@@ -57,6 +57,25 @@ const getSumForMonthProfesor = async (
   try {
     const sumFromMonth = await dbConnection.query(
       ` SELECT idProfesor, SUM(iznosUplate) AS prihodMjesecniProfesor
+FROM placanja
+WHERE idPredmet = ? 
+  AND idProfesor = ?  
+  AND MONTH(kreirano) = MONTH(CURRENT_DATE())
+  AND YEAR(kreirano) = YEAR(CURRENT_DATE())
+GROUP BY idProfesor;`,
+      [idPredmet, idProfesor]
+    );
+
+    return sumFromMonth;
+  } catch (err) {
+    return { success: false, msg: err };
+  }
+};
+
+const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
+  try {
+    const sumFromMonth = await dbConnection.query(
+      ` SELECT idProfesor, SUM(iznosUplate) AS prihodMjesecniProfesor
   FROM placanja
   WHERE idPredmet = ? and idProfesor = ?
   GROUP BY idProfesor;`,
@@ -113,4 +132,5 @@ export default {
   updatePayment,
   deletePayment,
   getSumForMonthProfesor,
+  getSumForProfesor,
 };
