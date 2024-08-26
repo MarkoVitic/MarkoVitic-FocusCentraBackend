@@ -145,6 +145,7 @@ const inserIntoMonthPlacanja = async (
   mjescniPrihod: number
 ) => {
   try {
+    console.log(mjescniPrihod, idProfesor);
     const query = await dbConnection.query(
       `UPDATE profesori 
       SET prihodMjesecniProfesor = ? 
@@ -173,6 +174,25 @@ const inserAllSumIntoPlacanja = async (
   }
 };
 
+// Insert into table profesor id of subjet
+
+const inserIntoProfesoriIdSubject = async (
+  idPredmet: number,
+  idProfesor: number
+) => {
+  try {
+    const insertIdSubjetInProfesosri = await dbConnection.query(
+      `UPDATE profesori 
+      SET idPredmet = ? 
+      WHERE idProfesor = ? `,
+      [idPredmet, idProfesor]
+    );
+    return insertIdSubjetInProfesosri;
+  } catch (err: any) {
+    throw new Error(`Error deleting subject: ${err.message}`);
+  }
+};
+
 export default {
   getAllProfessors,
   getProfessorById,
@@ -182,4 +202,5 @@ export default {
   getAllProfessorsWithSubjects,
   inserIntoMonthPlacanja,
   inserAllSumIntoPlacanja,
+  inserIntoProfesoriIdSubject,
 };

@@ -92,6 +92,7 @@ const inserIntoMonthPlacanja = async (
       idProfesor,
       mjescniPrihod
     );
+
     return data;
   } catch (err: any) {
     return {
@@ -119,6 +120,25 @@ const inserAllSumIntoPlacanja = async (
   }
 };
 
+const inserIntoProfesoriIdSubject = async (
+  idPredmet: number,
+  idProfesor: number
+) => {
+  try {
+    const data = await professorsRepositori.inserIntoProfesoriIdSubject(
+      idPredmet,
+      idProfesor
+    );
+
+    return data;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Cannot add subjet to table profesori: ${err.message}`,
+    };
+  }
+};
+
 export default {
   getAllProfessors,
   getProfessorById,
@@ -128,4 +148,5 @@ export default {
   getAllProfessorsWithSubjects,
   inserIntoMonthPlacanja,
   inserAllSumIntoPlacanja,
+  inserIntoProfesoriIdSubject,
 };

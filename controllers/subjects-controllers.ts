@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import subjectService from "../service/subjects-service";
+import professorsControllers from "./professors-controllers";
 
 // Controller to get all subjects
 const getAllSubjects = async (req: Request, res: Response) => {
@@ -57,6 +58,11 @@ const getSubjectById = async (req: Request, res: Response) => {
 const createSubject = async (req: Request, res: Response) => {
   try {
     const subjectData = req.body;
+
+    // professorsControllers.inserIntoProfesoriIdSubject(
+    //   parseInt(subjectData.idPredmet),
+    //   parseInt(subjectData.idProfesor)
+    // );
     const result = await subjectService.createSubject(subjectData);
 
     if (result.success) {
@@ -78,6 +84,10 @@ const updateSubject = async (req: Request, res: Response) => {
   try {
     const idPredmet = req.params.id;
     const subjectData = req.body;
+    professorsControllers.inserIntoProfesoriIdSubject(
+      parseInt(subjectData.idPredmet),
+      parseInt(subjectData.idProfesor)
+    );
     const result = await subjectService.updateSubject(
       Number(idPredmet),
       subjectData

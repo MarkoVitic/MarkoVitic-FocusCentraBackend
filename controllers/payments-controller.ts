@@ -77,8 +77,7 @@ const updatePayment = async (req: Request, res: Response) => {
   try {
     const idPlacanje = req.params.id;
     const paymentData = req.body;
-    console.log(idPlacanje);
-    console.log(paymentData);
+
     const result = await paymentsService.updatePayment(
       Number(idPlacanje),
       paymentData
@@ -132,7 +131,6 @@ const getSumForMonthProfesor = async (
       sumMntfProfesor[0].idProfesor,
       parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
     );
-    console.log(sumMntfProfesor[0].idProfesor);
   } catch (err: any) {
     return {
       success: false,
@@ -152,7 +150,6 @@ const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
       sumMntfProfesor[0].idProfesor,
       parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
     );
-    console.log(sumMntfProfesor[0].idProfesor);
   } catch (err: any) {
     return {
       success: false,
@@ -170,7 +167,6 @@ const getSumForStudentPayments = async (
     const sumForStudentPayments =
       await paymentsService.getSumForStudentPayments(idUcenik, idPredmet);
 
-    console.log(sumForStudentPayments[0]);
     return studentsController.inertIntoStudentTotalPayments(
       sumForStudentPayments[0]
     );
