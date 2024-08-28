@@ -7,6 +7,7 @@ import subjetsRute from "./routing/subjects-routing";
 import studetsRute from "./routing/students-routing";
 import paymentsRute from "./routing/payments-routing";
 import cors from "cors";
+import professorSubjectRouting from "./routing/professor-subject-routing";
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.use(profesoriRute);
 app.use(subjetsRute);
 app.use(studetsRute);
 app.use(paymentsRute);
+app.use(professorSubjectRouting);
 
 dbConnection
   .initialize()

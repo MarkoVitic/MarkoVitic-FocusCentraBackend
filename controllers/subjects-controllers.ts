@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import subjectService from "../service/subjects-service";
 import professorsControllers from "./professors-controllers";
+import professorSubjectService from "../service/professor-subject-service";
 
 // Controller to get all subjects
 const getAllSubjects = async (req: Request, res: Response) => {
@@ -58,6 +59,13 @@ const getSubjectById = async (req: Request, res: Response) => {
 const createSubject = async (req: Request, res: Response) => {
   try {
     const subjectData = req.body;
+    const professorSubjectData = {
+      idProfesor: parseInt(subjectData.idProfesor),
+      idPredmet: parseInt(subjectData.idPredmet),
+      procenat: parseInt(subjectData.procenat),
+      mjesecniPrihod: 0,
+      ukupniPrihod: 0,
+    };
 
     // professorsControllers.inserIntoProfesoriIdSubject(
     //   parseInt(subjectData.idPredmet),
@@ -66,6 +74,18 @@ const createSubject = async (req: Request, res: Response) => {
     const result = await subjectService.createSubject(subjectData);
 
     if (result.success) {
+      // Upisivanje u tabelu profesor_predemt
+      const professorSubjectData = {
+        idProfesor: parseInt(subjectData.idProfesor),
+        idPredmet: result.id,
+        procenat: parseInt(subjectData.procenat),
+        mjesecniPrihod: 0,
+        ukupniPrihod: 0,
+      };
+
+      professorSubjectService.createProfessorSubjectRelation(
+        professorSubjectData
+      );
       res.status(201).json(result); // 201 Created
     } else {
       res.status(400).json(result); // 400 Bad Request
@@ -84,10 +104,10 @@ const updateSubject = async (req: Request, res: Response) => {
   try {
     const idPredmet = req.params.id;
     const subjectData = req.body;
-    professorsControllers.inserIntoProfesoriIdSubject(
-      parseInt(subjectData.idPredmet),
-      parseInt(subjectData.idProfesor)
-    );
+    // professorsControllers.inserIntoProfesoriIdSubject(
+    //   parseInt(subjectData.idPredmet),
+    //   parseInt(subjectData.idProfesor)
+    // );
     const result = await subjectService.updateSubject(
       Number(idPredmet),
       subjectData

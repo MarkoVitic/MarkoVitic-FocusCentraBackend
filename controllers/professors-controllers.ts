@@ -36,7 +36,7 @@ const getProfessorById = async (req: Request, res: Response) => {
 const createProfessor = async (req: Request, res: Response) => {
   try {
     const professorData: any = req.body;
-    console.log(professorData);
+
     const result = await professorsService.createProfessor(professorData);
 
     if (result.success) {
