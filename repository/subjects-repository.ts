@@ -16,24 +16,10 @@ const getAllSubjects = async () => {
 const getAllSubjetsWithProfessors = async () => {
   try {
     const query = await dbConnection.query(`
-     SELECT 
-        pr.idPredmet,
-        pr.nazivPredmeta,
-        pr.cijenaPrograma,
-        pr.popustPrograma,
-        pr.ukupnaCijenaPrograma,
-        pr.kreirano,
-        pr.azurirano,
-        pr.idProfesor,
-         p.ImePrezimeProfesor
-       
-        
-      FROM 
-        profesori p
-      RIGHT JOIN 
-        predmeti pr
-      ON
-        p.idProfesor =pr.idProfesor;
+    SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor
+    FROM predmeti pred
+    LEFT JOIN profesori_predmeti pp ON pp.idPredmet = pred.idPredmet
+    LEFT JOIN profesori p ON pp.idProfesor = p.idProfesor;
     `);
     return query;
   } catch (err: any) {
@@ -60,13 +46,18 @@ const createSubject = async (subjectData: any) => {
     cijenaPrograma,
     popustPrograma,
     ukupnaCijenaPrograma,
-    idProfesor,
   } = subjectData;
 
+  console.log(
+    nazivPredmeta,
+    cijenaPrograma,
+    popustPrograma,
+    ukupnaCijenaPrograma
+  );
   const query = `
     INSERT INTO predmeti 
-    (nazivPredmeta, cijenaPrograma, popustPrograma, ukupnaCijenaPrograma, idProfesor) 
-    VALUES (?, ?, ?, ?, ?)
+    (nazivPredmeta, cijenaPrograma, popustPrograma, ukupnaCijenaPrograma ) 
+    VALUES (?, ?, ?, ?)
   `;
 
   const values = [
@@ -74,7 +65,6 @@ const createSubject = async (subjectData: any) => {
     cijenaPrograma,
     popustPrograma,
     ukupnaCijenaPrograma,
-    idProfesor,
   ];
 
   try {
@@ -92,7 +82,6 @@ const updateSubject = async (idPredmet: number, subjectData: any) => {
     cijenaPrograma,
     popustPrograma,
     ukupnaCijenaPrograma,
-    idProfesor,
   } = subjectData;
 
   const query = `
@@ -102,7 +91,7 @@ const updateSubject = async (idPredmet: number, subjectData: any) => {
       cijenaPrograma = ?, 
       popustPrograma = ?, 
       ukupnaCijenaPrograma = ?, 
-      idProfesor = ?, 
+      
       azurirano = CURRENT_TIMESTAMP
     WHERE idPredmet = ?
   `;
@@ -112,7 +101,7 @@ const updateSubject = async (idPredmet: number, subjectData: any) => {
     cijenaPrograma,
     popustPrograma,
     ukupnaCijenaPrograma,
-    idProfesor,
+
     idPredmet,
   ];
 

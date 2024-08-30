@@ -7,6 +7,16 @@ const getAllProfessors = async () => {
   return allProfessors;
 };
 
+const getAllProfesorsFromProfessorsTable = async () => {
+  try {
+    const data =
+      await professorsRepository.getAllProfesorsFromProfessorsTable();
+    return data;
+  } catch (err) {
+    return { success: false, msg: err };
+  }
+};
+
 //Get All with Subjects
 const getAllProfessorsWithSubjects = async () => {
   const allProfessors =
@@ -14,8 +24,11 @@ const getAllProfessorsWithSubjects = async () => {
   return allProfessors;
 };
 
-const getProfessorById = async (idProfessor: number) => {
-  const professor = await professorsRepository.getProfessorById(idProfessor);
+const getProfessorById = async (idPredmet: number, idProfessor: number) => {
+  const professor = await professorsRepository.getProfessorById(
+    idPredmet,
+    idProfessor
+  );
 
   return professor;
 };
@@ -149,4 +162,5 @@ export default {
   inserIntoMonthPlacanja,
   inserAllSumIntoPlacanja,
   inserIntoProfesoriIdSubject,
+  getAllProfesorsFromProfessorsTable,
 };

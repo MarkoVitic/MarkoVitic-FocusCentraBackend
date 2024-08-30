@@ -17,5 +17,22 @@ const createProfessorSubjectRelation = async (req: Request, res: Response) => {
     });
   }
 };
+const editProcenatProfessorSubject = async (req: Request, res: Response) => {
+  try {
+    const { idProfessor, idSubject, procent } = req.body;
+    const data = await professorSubjectService.editProcenatProfessorSubject(
+      parseInt(idProfessor),
+      parseInt(idSubject),
+      parseInt(procent)
+    );
+    return res.send(data);
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
 
-export default { createProfessorSubjectRelation };
+export default { createProfessorSubjectRelation, editProcenatProfessorSubject };

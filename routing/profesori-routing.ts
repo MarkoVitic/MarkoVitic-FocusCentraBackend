@@ -9,11 +9,19 @@ profesoriRute
   .post(professorsControllers.createProfessor);
 profesoriRute
   .route("/professors/:id")
-  .get(professorsControllers.getProfessorById)
-  .put(professorsControllers.updateProfessor)
-  .delete(professorsControllers.deleteProfessor);
+  .put(professorsControllers.updateProfessor);
+
 profesoriRute
   .route("/professorsall")
   .get(professorsControllers.getAllProfessorsWithSubjects);
+
+profesoriRute
+  .route("/professors/:idPredemt/:idProfesor")
+  .get(professorsControllers.getProfessorById)
+  .delete(professorsControllers.deleteProfessor);
+
+profesoriRute
+  .route("/professorstable")
+  .get(professorsControllers.getAllProfesorsFromProfessorsTable);
 
 export default profesoriRute;

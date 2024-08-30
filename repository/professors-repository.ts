@@ -1,19 +1,41 @@
 import { dbConnection } from "../common/db-conection";
 
+const getAllProfesorsFromProfessorsTable = async () => {
+  try {
+    const data = await dbConnection.query(`
+    SELECT * 
+    FROM profesori
+     `);
+    return data;
+  } catch (err) {
+    return { success: false, msg: err };
+  }
+};
+
 const getAllProfessors = async () => {
   try {
-    const allProfessors = await dbConnection.query(`SELECT * FROM profesori`);
+    const allProfessors =
+      await dbConnection.query(`SELECT  p.ImePrezimeProfesor, s.nazivPredmeta, pp.mjesecniPrihod, pp.ukupniPrihod, pp.procenat,pp.idPredmet, p.idProfesor
+    FROM profesori p
+    LEFT JOIN profesori_predmeti pp ON pp.idProfesor = p.idProfesor
+    LEFT JOIN predmeti s ON pp.idPredmet = s.idPredmet;`);
     return allProfessors;
   } catch (err) {
     return { success: false, msg: err };
   }
 };
 
-const getProfessorById = async (idProfesor: number) => {
+const getProfessorById = async (idPredmet: number, idProfesor: number) => {
   try {
     const professor = await dbConnection.query(
-      `SELECT * FROM profesori WHERE idProfesor = ?`,
-      [idProfesor]
+      `SELECT p.*,pp.procenat, pp.idPredmet
+       FROM profesori p
+       JOIN profesori_predmeti pp ON pp.idProfesor = p.idProfesor
+       WHERE pp.idPredmet=? and pp.idProfesor=?
+;
+ 
+;`,
+      [idPredmet, idProfesor]
     );
     if (professor.length > 0) {
       return professor[0];
@@ -35,9 +57,6 @@ const getAllProfessorsWithSubjects = async () => {
         p.kontaktProfesor,
         p.emailProfesor,
         p.adresaProfesor,
-        p.procenatProfesor,
-        p.prihodMjesecniProfesor,
-        p.prihodUkupni,
         pr.idPredmet,
         pr.nazivPredmeta
       FROM 
@@ -55,18 +74,13 @@ const getAllProfessorsWithSubjects = async () => {
 
 // Function to create a new professor
 const createProfessor = async (professorData: any) => {
-  const {
-    ImePrezimeProfesor,
-    kontaktProfesor,
-    emailProfesor,
-    adresaProfesor,
-    procenatProfesor,
-  } = professorData;
+  const { ImePrezimeProfesor, kontaktProfesor, emailProfesor, adresaProfesor } =
+    professorData;
 
   const query = `
     INSERT INTO profesori 
-    (ImePrezimeProfesor, kontaktProfesor, emailProfesor, adresaProfesor, procenatProfesor, kreirano, azurirano) 
-    VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    (ImePrezimeProfesor, kontaktProfesor, emailProfesor, adresaProfesor, kreirano, azurirano) 
+    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `;
 
   const values = [
@@ -74,7 +88,6 @@ const createProfessor = async (professorData: any) => {
     kontaktProfesor,
     emailProfesor,
     adresaProfesor,
-    procenatProfesor,
   ];
 
   try {
@@ -87,13 +100,8 @@ const createProfessor = async (professorData: any) => {
 
 // Function to update an existing professor
 const updateProfessor = async (idProfessor: number, professorData: any) => {
-  const {
-    ImePrezimeProfesor,
-    kontaktProfesor,
-    emailProfesor,
-    adresaProfesor,
-    procenatProfesor,
-  } = professorData;
+  const { ImePrezimeProfesor, kontaktProfesor, emailProfesor, adresaProfesor } =
+    professorData;
 
   const query = `
     UPDATE profesori 
@@ -102,7 +110,7 @@ const updateProfessor = async (idProfessor: number, professorData: any) => {
       kontaktProfesor = ?, 
       emailProfesor = ?, 
       adresaProfesor = ?, 
-      procenatProfesor = ?, 
+    
       
       azurirano = CURRENT_TIMESTAMP
     WHERE idProfesor = ?
@@ -113,7 +121,6 @@ const updateProfessor = async (idProfessor: number, professorData: any) => {
     kontaktProfesor,
     emailProfesor,
     adresaProfesor,
-    procenatProfesor,
 
     idProfessor,
   ];
@@ -203,4 +210,5 @@ export default {
   inserIntoMonthPlacanja,
   inserAllSumIntoPlacanja,
   inserIntoProfesoriIdSubject,
+  getAllProfesorsFromProfessorsTable,
 };

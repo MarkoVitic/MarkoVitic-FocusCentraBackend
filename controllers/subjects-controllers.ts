@@ -57,39 +57,11 @@ const getSubjectById = async (req: Request, res: Response) => {
 
 // Controller to create a new subject
 const createSubject = async (req: Request, res: Response) => {
+  const subjectData = req.body;
   try {
-    const subjectData = req.body;
-    const professorSubjectData = {
-      idProfesor: parseInt(subjectData.idProfesor),
-      idPredmet: parseInt(subjectData.idPredmet),
-      procenat: parseInt(subjectData.procenat),
-      mjesecniPrihod: 0,
-      ukupniPrihod: 0,
-    };
-
-    // professorsControllers.inserIntoProfesoriIdSubject(
-    //   parseInt(subjectData.idPredmet),
-    //   parseInt(subjectData.idProfesor)
-    // );
     const result = await subjectService.createSubject(subjectData);
 
-    if (result.success) {
-      // Upisivanje u tabelu profesor_predemt
-      const professorSubjectData = {
-        idProfesor: parseInt(subjectData.idProfesor),
-        idPredmet: result.id,
-        procenat: parseInt(subjectData.procenat),
-        mjesecniPrihod: 0,
-        ukupniPrihod: 0,
-      };
-
-      professorSubjectService.createProfessorSubjectRelation(
-        professorSubjectData
-      );
-      res.status(201).json(result); // 201 Created
-    } else {
-      res.status(400).json(result); // 400 Bad Request
-    }
+    res.status(200).json(result); // 200 OK
   } catch (err: any) {
     res.status(500).json({
       success: false,

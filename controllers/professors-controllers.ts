@@ -1,9 +1,22 @@
 import { Response, Request } from "express";
 import professorsService from "../service/professors-service";
+import professorSubjectService from "../service/professor-subject-service";
 
 const getAllProfessors = async (req: Request, res: Response) => {
   const allProfessors = await professorsService.getAllProfessors();
   res.send(allProfessors);
+};
+
+const getAllProfesorsFromProfessorsTable = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const data = await professorsService.getAllProfesorsFromProfessorsTable();
+    res.send(data);
+  } catch (err) {
+    return { success: false, msg: err };
+  }
 };
 
 //Get All professors with Subjects
@@ -15,8 +28,10 @@ const getAllProfessorsWithSubjects = async (req: Request, res: Response) => {
 
 const getProfessorById = async (req: Request, res: Response) => {
   try {
-    const idProfesor = req.params.id;
+    const { idPredemt, idProfesor } = req.params;
+
     const professor = await professorsService.getProfessorById(
+      parseInt(idPredemt),
       parseInt(idProfesor)
     );
 
@@ -64,6 +79,14 @@ const updateProfessor = async (req: Request, res: Response) => {
       professorData
     );
 
+    const { idProfesor, idPredmet, procenat } = professorData;
+
+    professorSubjectService.editProcenatProfessorSubject(
+      idProfesor,
+      idPredmet,
+      procenat
+    );
+
     if (result.success) {
       res.status(200).send(result); // 200 OK
     } else {
@@ -81,15 +104,24 @@ const updateProfessor = async (req: Request, res: Response) => {
 // delete a professor by ID
 const deleteProfessor = async (req: Request, res: Response) => {
   try {
-    const idProfessor = req.params.id; // Extract the professor ID from the request parameters
-    const result = await professorsService.deleteProfessor(
-      parseInt(idProfessor)
-    );
+    const { idPredemt, idProfesor } = req.params;
+    console.log(idPredemt, idProfesor);
+    const deleteFromProfessorSubject =
+      await professorSubjectService.deleteProfessorSubjectRelation(
+        parseInt(idProfesor),
+        parseInt(idPredemt)
+      );
+    if (deleteFromProfessorSubject) {
+      const result = await professorsService.deleteProfessor(
+        parseInt(idProfesor)
+      );
 
-    if (result.success) {
-      res.status(200).send(result); // 200 OK
-    } else {
-      res.status(404).send(result); // 404 Not Found
+      if (result.success) {
+        res.status(200).send(result); // 200 OK
+        return result;
+      } else {
+        res.status(404).send(result); // 404 Not Found
+      }
     }
   } catch (err: any) {
     res.status(500).send({
@@ -160,4 +192,5 @@ export default {
   inserIntoMonthPlacanja,
   inserAllSumIntoPlacanja,
   inserIntoProfesoriIdSubject,
+  getAllProfesorsFromProfessorsTable,
 };

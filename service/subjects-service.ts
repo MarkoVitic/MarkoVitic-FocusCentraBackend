@@ -1,4 +1,5 @@
 import subjectRepository from "../repository/subjects-repository";
+import professorSubjectService from "./professor-subject-service";
 
 // Service to get all subjects
 const getAllSubjects = async () => {
@@ -64,7 +65,21 @@ const createSubject = async (subjectData: any) => {
     let ukCijena: number =
       cijenaPrograma - (cijenaPrograma * popustPrograma) / 100;
     subjectData.ukupnaCijenaPrograma = ukCijena;
+
     const newSubjectId = await subjectRepository.createSubject(subjectData);
+
+    if (newSubjectId && subjectData.idProfesor) {
+      const dataForProfessorSubjectTable = {
+        idProfesor: subjectData.idProfesor,
+        idPredmet: newSubjectId,
+        procenat: subjectData.procenat,
+      };
+
+      professorSubjectService.createProfessorSubjectRelation(
+        dataForProfessorSubjectTable
+      );
+    }
+
     return {
       success: true,
       id: newSubjectId,
