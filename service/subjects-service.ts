@@ -60,6 +60,15 @@ const getSubjectById = async (idPredmet: number, idProfesor: number) => {
   }
 };
 
+const getOnlySubject = async (id: number) => {
+  try {
+    const data = await subjectRepository.getOnlySubject(id);
+    return data;
+  } catch (err: any) {
+    throw new Error(`Error retrieving subject by ID: ${err.message}`);
+  }
+};
+
 // Service to create a new subject
 const createSubject = async (subjectData: any) => {
   try {
@@ -151,4 +160,5 @@ export default {
   updateSubject,
   deleteSubject,
   getAllSubjetsWithProfessors,
+  getOnlySubject,
 };

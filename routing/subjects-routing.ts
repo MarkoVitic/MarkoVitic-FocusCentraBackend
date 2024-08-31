@@ -8,14 +8,15 @@ subjetsRute
   .post(subjectsControllers.createSubject);
 subjetsRute
   .route("/subjets/:id")
-  .delete(subjectsControllers.deleteSubject)
-  .put(subjectsControllers.updateSubject);
+  .put(subjectsControllers.updateSubject)
+  .get(subjectsControllers.getOnlySubject);
 subjetsRute
   .route("/subjetsall")
   .get(subjectsControllers.getAllSubjetsWithProfessors);
 
 subjetsRute
-  .route("/subjets/:id/:professorId")
-  .get(subjectsControllers.getSubjectById);
+  .route("/subjets/:id/:idProfesor")
+  .get(subjectsControllers.getSubjectById)
+  .delete(subjectsControllers.deleteSubject);
 
 export default subjetsRute;

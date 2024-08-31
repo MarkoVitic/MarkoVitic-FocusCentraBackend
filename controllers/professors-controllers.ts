@@ -81,7 +81,7 @@ const updateProfessor = async (req: Request, res: Response) => {
 
     const { idProfesor, idPredmet, procenat } = professorData;
 
-    professorSubjectService.editProcenatProfessorSubject(
+    await professorSubjectService.editProcenatProfessorSubject(
       idProfesor,
       idPredmet,
       procenat

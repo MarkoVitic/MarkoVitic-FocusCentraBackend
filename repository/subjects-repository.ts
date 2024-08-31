@@ -1,3 +1,4 @@
+import { query } from "express";
 import { dbConnection } from "../common/db-conection"; // Import your database connection module
 
 // Function to get all subjects
@@ -29,7 +30,8 @@ const getAllSubjetsWithProfessors = async () => {
 
 // Function to get a single subject by ID
 const getSubjectById = async (idPredmet: number, idProfesor: number) => {
-  const query = `
+  if (idProfesor) {
+    const query = `
     SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor,pp.procenat
     FROM predmeti pred
     LEFT JOIN profesori_predmeti pp ON pp.idPredmet = pred.idPredmet
@@ -37,11 +39,69 @@ const getSubjectById = async (idPredmet: number, idProfesor: number) => {
     WHERE pred.idPredmet=? and p.idProfesor=?
     `;
 
-  const value = [idPredmet, idProfesor];
+    const value = [idPredmet, idProfesor];
 
+    try {
+      const subject = await dbConnection.query(query, value);
+      return subject; // Return the first record if found
+    } catch (err: any) {
+      throw new Error(`Error retrieving subject by ID: ${err.message}`);
+    }
+  } else {
+    const query = `
+    SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor,pp.procenat
+    FROM predmeti pred
+    LEFT JOIN profesori_predmeti pp ON pp.idPredmet = pred.idPredmet
+    LEFT JOIN profesori p ON pp.idProfesor = p.idProfesor
+    WHERE pred.idPredmet=? 
+    `;
+
+    const value = [idPredmet, idProfesor];
+
+    try {
+      const subject = await dbConnection.query(query, value);
+      return subject; // Return the first record if found
+    } catch (err: any) {
+      throw new Error(`Error retrieving subject by ID: ${err.message}`);
+    }
+  }
+};
+
+// const getSubjectByIdWithoutProfessor = async (
+//   idPredmet: number,
+//   idProfesor: number
+// ) => {
+//   const query = `
+//     SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor,pp.procenat
+//     FROM predmeti pred
+//     LEFT JOIN profesori_predmeti pp ON pp.idPredmet = pred.idPredmet
+//     LEFT JOIN profesori p ON pp.idProfesor = p.idProfesor
+//     WHERE pred.idPredmet=?
+//     `;
+
+//   const value = [idPredmet, idProfesor];
+
+//   try {
+//     const subject = await dbConnection.query(query, value);
+//     return subject; // Return the first record if found
+//   } catch (err: any) {
+//     throw new Error(`Error retrieving subject by ID: ${err.message}`);
+//   }
+// };
+
+//Get only Subject
+
+const getOnlySubject = async (id: number) => {
   try {
-    const subject = await dbConnection.query(query, value);
-    return subject; // Return the first record if found
+    const data = await dbConnection.query(
+      `
+    SELECT * 
+FROM predmeti
+WHERE idPredmet = ?;
+      `,
+      [id]
+    );
+    return data;
   } catch (err: any) {
     throw new Error(`Error retrieving subject by ID: ${err.message}`);
   }
@@ -140,4 +200,5 @@ export default {
   updateSubject,
   deleteSubject,
   getAllSubjetsWithProfessors,
+  getOnlySubject,
 };

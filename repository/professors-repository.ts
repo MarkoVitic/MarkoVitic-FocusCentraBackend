@@ -26,22 +26,43 @@ const getAllProfessors = async () => {
 };
 
 const getProfessorById = async (idPredmet: number, idProfesor: number) => {
-  try {
-    const professor = await dbConnection.query(
-      `SELECT p.*,pp.procenat, pp.idPredmet
-       FROM profesori p
-       JOIN profesori_predmeti pp ON pp.idProfesor = p.idProfesor
-       WHERE pp.idPredmet=? and pp.idProfesor=?
-;`,
-      [idPredmet, idProfesor]
-    );
-    if (professor.length > 0) {
-      return professor[0];
-    } else {
-      return { success: false, msg: "Professor not found" };
+  if (idPredmet) {
+    try {
+      const professor = await dbConnection.query(
+        `SELECT p.*,pp.procenat, pp.idPredmet
+         FROM profesori p
+         JOIN profesori_predmeti pp ON pp.idProfesor = p.idProfesor
+         WHERE pp.idPredmet=? and pp.idProfesor=?
+  ;`,
+        [idPredmet, idProfesor]
+      );
+      if (professor.length > 0) {
+        return professor[0];
+      } else {
+        return { success: false, msg: "Professor not found" };
+      }
+    } catch (err) {
+      return { success: false, msg: err };
     }
-  } catch (err) {
-    return { success: false, msg: err };
+  } else {
+    try {
+      const professor = await dbConnection.query(
+        `SELECT p.*,pp.procenat, pp.idPredmet
+       FROM profesori p
+       LEFT JOIN profesori_predmeti pp ON pp.idProfesor = p.idProfesor
+       WHERE  p.idProfesor=?
+;`,
+        [idProfesor]
+      );
+
+      if (professor.length > 0) {
+        return professor[0];
+      } else {
+        return { success: false, msg: "Professor not found" };
+      }
+    } catch (err) {
+      return { success: false, msg: err };
+    }
   }
 };
 

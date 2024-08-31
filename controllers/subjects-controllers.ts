@@ -59,6 +59,18 @@ const getSubjectById = async (req: Request, res: Response) => {
   }
 };
 
+const getOnlySubject = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+
+    const data = await subjectService.getOnlySubject(parseInt(id));
+    console.log(data);
+    return data;
+  } catch (err: any) {
+    throw new Error(`Error retrieving subject by ID: ${err.message}`);
+  }
+};
+
 // Controller to create a new subject
 const createSubject = async (req: Request, res: Response) => {
   const subjectData = req.body;
@@ -78,15 +90,20 @@ const createSubject = async (req: Request, res: Response) => {
 // Controller to update an existing subject
 const updateSubject = async (req: Request, res: Response) => {
   try {
-    const idPredmet = req.params.id;
+    const idPredmett = req.params.id;
     const subjectData = req.body;
-    // professorsControllers.inserIntoProfesoriIdSubject(
-    //   parseInt(subjectData.idPredmet),
-    //   parseInt(subjectData.idProfesor)
-    // );
+
     const result = await subjectService.updateSubject(
-      Number(idPredmet),
+      Number(idPredmett),
       subjectData
+    );
+
+    const { idProfesor, idPredmet, procenat } = subjectData;
+
+    await professorSubjectService.editProcenatProfessorSubject(
+      idProfesor,
+      idPredmet,
+      procenat
     );
 
     if (result.success) {
@@ -106,13 +123,21 @@ const updateSubject = async (req: Request, res: Response) => {
 // Controller to delete a subject by ID
 const deleteSubject = async (req: Request, res: Response) => {
   try {
-    const idPredmet = req.params.id;
-    const result = await subjectService.deleteSubject(Number(idPredmet));
+    const { id, idProfesor } = req.params;
+    console.log(id, idProfesor);
+    const deleteFromProfessorSubject =
+      await professorSubjectService.deleteProfessorSubjectRelation(
+        parseInt(idProfesor),
+        parseInt(id)
+      );
+    if (deleteFromProfessorSubject) {
+      const result = await subjectService.deleteSubject(Number(id));
 
-    if (result.success) {
-      res.status(200).json(result); // 200 OK
-    } else {
-      res.status(404).json(result); // 404 Not Found
+      if (result.success) {
+        res.status(200).json(result); // 200 OK
+      } else {
+        res.status(404).json(result); // 404 Not Found
+      }
     }
   } catch (err: any) {
     res.status(500).json({
@@ -130,4 +155,5 @@ export default {
   updateSubject,
   deleteSubject,
   getAllSubjetsWithProfessors,
+  getOnlySubject,
 };
