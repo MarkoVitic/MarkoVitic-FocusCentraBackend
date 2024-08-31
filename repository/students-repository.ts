@@ -15,7 +15,7 @@ const getAllStudents = async () => {
 const getAllStudentsWithSubjectName = async () => {
   try {
     const query = await dbConnection.query(`
-      SELECT 
+    SELECT 
         u.idUcenik,
         u.ImePrezimeUcenika,
         u.ocjenaJedan,
@@ -25,18 +25,11 @@ const getAllStudentsWithSubjectName = async () => {
         u.ukupnoPlacenoDoSada,
         u.idPredmet,
         u.popust,
-         pr.nazivPredmeta,
-           pr.ukupnaCijenaPrograma
-       
-         
-       
-        
-      FROM 
-        ucenici u
-      LEFT JOIN 
-        predmeti pr
-      ON
-        pr.idPredmet =u.idPredmet;
+		pp.idPredmet
+	FROM 
+    ucenici u
+	LEFT JOIN profesori_predmeti pp ON pp.idPredmet = u.idPredmet  
+      
     `);
     return query;
   } catch (err: any) {
