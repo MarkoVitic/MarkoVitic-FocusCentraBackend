@@ -39,7 +39,11 @@ const getAllSubjetsWithProfessors = async (req: Request, res: Response) => {
 const getSubjectById = async (req: Request, res: Response) => {
   try {
     const idPredmet = req.params.id;
-    const result = await subjectService.getSubjectById(Number(idPredmet));
+    const idProfesor = req.params.professorId;
+    const result = await subjectService.getSubjectById(
+      Number(idPredmet),
+      Number(idProfesor)
+    );
 
     if (result.success) {
       res.status(200).json(result); // 200 OK

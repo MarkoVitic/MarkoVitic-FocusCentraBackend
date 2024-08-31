@@ -28,11 +28,19 @@ const getAllSubjetsWithProfessors = async () => {
 };
 
 // Function to get a single subject by ID
-const getSubjectById = async (idPredmet: number) => {
-  const query = "SELECT * FROM predmeti WHERE idPredmet = ?";
+const getSubjectById = async (idPredmet: number, idProfesor: number) => {
+  const query = `
+    SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor,pp.procenat
+    FROM predmeti pred
+    LEFT JOIN profesori_predmeti pp ON pp.idPredmet = pred.idPredmet
+    LEFT JOIN profesori p ON pp.idProfesor = p.idProfesor
+    WHERE pred.idPredmet=? and p.idProfesor=?
+    `;
+
+  const value = [idPredmet, idProfesor];
 
   try {
-    const subject = await dbConnection.query(query, [idPredmet]);
+    const subject = await dbConnection.query(query, value);
     return subject; // Return the first record if found
   } catch (err: any) {
     throw new Error(`Error retrieving subject by ID: ${err.message}`);

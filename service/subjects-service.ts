@@ -40,9 +40,12 @@ const getAllSubjetsWithProfessors = async () => {
 };
 
 // Service to get a single subject by ID
-const getSubjectById = async (idPredmet: number) => {
+const getSubjectById = async (idPredmet: number, idProfesor: number) => {
   try {
-    const subject = await subjectRepository.getSubjectById(idPredmet);
+    const subject = await subjectRepository.getSubjectById(
+      idPredmet,
+      idProfesor
+    );
 
     if (subject) {
       return { success: true, data: subject };

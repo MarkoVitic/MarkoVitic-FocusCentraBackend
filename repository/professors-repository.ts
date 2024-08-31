@@ -32,8 +32,6 @@ const getProfessorById = async (idPredmet: number, idProfesor: number) => {
        FROM profesori p
        JOIN profesori_predmeti pp ON pp.idProfesor = p.idProfesor
        WHERE pp.idPredmet=? and pp.idProfesor=?
-;
- 
 ;`,
       [idPredmet, idProfesor]
     );
