@@ -17,7 +17,7 @@ const getAllSubjects = async () => {
 const getAllSubjetsWithProfessors = async () => {
   try {
     const query = await dbConnection.query(`
-    SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor
+    SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor,pp.idProfesoriPredmeti
     FROM predmeti pred
     LEFT JOIN profesori_predmeti pp ON pp.idPredmet = pred.idPredmet
     LEFT JOIN profesori p ON pp.idProfesor = p.idProfesor;
@@ -66,28 +66,6 @@ const getSubjectById = async (idPredmet: number, idProfesor: number) => {
     }
   }
 };
-
-// const getSubjectByIdWithoutProfessor = async (
-//   idPredmet: number,
-//   idProfesor: number
-// ) => {
-//   const query = `
-//     SELECT  pred.*, p.idProfesor,p.ImePrezimeProfesor,pp.procenat
-//     FROM predmeti pred
-//     LEFT JOIN profesori_predmeti pp ON pp.idPredmet = pred.idPredmet
-//     LEFT JOIN profesori p ON pp.idProfesor = p.idProfesor
-//     WHERE pred.idPredmet=?
-//     `;
-
-//   const value = [idPredmet, idProfesor];
-
-//   try {
-//     const subject = await dbConnection.query(query, value);
-//     return subject; // Return the first record if found
-//   } catch (err: any) {
-//     throw new Error(`Error retrieving subject by ID: ${err.message}`);
-//   }
-// };
 
 //Get only Subject
 

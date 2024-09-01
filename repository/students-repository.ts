@@ -15,20 +15,12 @@ const getAllStudents = async () => {
 const getAllStudentsWithSubjectName = async () => {
   try {
     const query = await dbConnection.query(`
-    SELECT 
-        u.idUcenik,
-        u.ImePrezimeUcenika,
-        u.ocjenaJedan,
-        u.ocjenaDva,
-        u.ocjenaTri,
-        u.ocjenaCetiri,
-        u.ukupnoPlacenoDoSada,
-        u.idPredmet,
-        u.popust,
-		pp.idPredmet
-	FROM 
-    ucenici u
-	LEFT JOIN profesori_predmeti pp ON pp.idPredmet = u.idPredmet  
+     SELECT u.*, pp.idProfesoriPredmeti, pp.idPredmet, pp.idProfesor, p.nazivPredmeta,prof.ImePrezimeProfesor,p.ukupnaCijenaPrograma
+FROM ucenici u
+LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = u.idProfesoriPredmeti
+LEFT JOIN predmeti p ON pp.idPredmet = p.idPredmet
+LEFT JOIN profesori prof ON pp.idProfesor = prof.idProfesor;
+    
       
     `);
     return query;
@@ -60,15 +52,16 @@ const createStudent = async (studentData: any) => {
     ocjenaDva,
     ocjenaTri,
     ocjenaCetiri,
-    idPredmet,
+
     ukupnoPlacenoDoSada,
     popust,
+    idProfesoriPredmeti,
   } = studentData;
-
+  console.log(idProfesoriPredmeti);
   const query = `
     INSERT INTO ucenici 
-    (ImePrezimeUcenika, ImeRoditelja, kontaktRoditelja, emailRoditelja, ocjenaJedan, ocjenaDva, ocjenaTri, ocjenaCetiri, idPredmet, ukupnoPlacenoDoSada,popust,kreirano, azurirano) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)
+    (ImePrezimeUcenika, ImeRoditelja, kontaktRoditelja, emailRoditelja, ocjenaJedan, ocjenaDva, ocjenaTri, ocjenaCetiri, ukupnoPlacenoDoSada,popust,idProfesoriPredmeti,kreirano, azurirano) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)
   `;
 
   const values = [
@@ -80,9 +73,9 @@ const createStudent = async (studentData: any) => {
     ocjenaDva,
     ocjenaTri,
     ocjenaCetiri,
-    idPredmet,
     ukupnoPlacenoDoSada,
     popust,
+    idProfesoriPredmeti,
   ];
 
   try {

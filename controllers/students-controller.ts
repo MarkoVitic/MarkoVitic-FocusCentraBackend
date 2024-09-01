@@ -73,6 +73,9 @@ const createStudent = async (req: Request, res: Response) => {
         ? 0
         : studentData.ukupnoPlacenoDoSada,
       popust: !studentData.popust ? 0 : studentData.popust,
+      idProfesoriPredmeti: !studentData.idProfesoriPredmeti
+        ? 0
+        : studentData.idProfesoriPredmeti,
     };
 
     const result = await studentsService.createStudent(newData);
