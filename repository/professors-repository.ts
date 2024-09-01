@@ -15,7 +15,7 @@ const getAllProfesorsFromProfessorsTable = async () => {
 const getAllProfessors = async () => {
   try {
     const allProfessors =
-      await dbConnection.query(`SELECT  p.ImePrezimeProfesor, s.nazivPredmeta, pp.mjesecniPrihod, pp.ukupniPrihod, pp.procenat,pp.idPredmet, p.idProfesor
+      await dbConnection.query(`SELECT  p.ImePrezimeProfesor, s.nazivPredmeta, pp.mjesecniPrihod, pp.ukupniPrihod, pp.procenat,pp.idPredmet, p.idProfesor,pp.idProfesoriPredmeti
     FROM profesori p
     LEFT JOIN profesori_predmeti pp ON pp.idProfesor = p.idProfesor
     LEFT JOIN predmeti s ON pp.idPredmet = s.idPredmet;`);
@@ -158,6 +158,7 @@ const deleteProfessor = async (idProfessor: number) => {
 
   try {
     const result = await dbConnection.query(query, [idProfessor]);
+    console.log(result);
     return result.affectedRows; // Returns the number of rows affected (should be 1 if successful)
   } catch (err: any) {
     throw new Error(`Error deleting professor: ${err.message}`);

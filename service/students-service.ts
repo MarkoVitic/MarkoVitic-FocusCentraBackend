@@ -16,6 +16,12 @@ const getAllStudents = async () => {
 const getAllStudentsWithSubjectName = async () => {
   try {
     const students = await studentsRepository.getAllStudentsWithSubjectName();
+    students.forEach((element: any) => {
+      element.ukupnaCijenaPrograma -= Math.round(
+        (element.ukupnaCijenaPrograma * element.popust) / 100
+      );
+    });
+
     return students;
   } catch (err: any) {
     return {

@@ -9,7 +9,8 @@ profesoriRute
   .post(professorsControllers.createProfessor);
 profesoriRute
   .route("/professors/:id")
-  .put(professorsControllers.updateProfessor);
+  .put(professorsControllers.updateProfessor)
+  .delete(professorsControllers.deleteProfessor);
 
 profesoriRute
   .route("/professorsall")
@@ -17,8 +18,7 @@ profesoriRute
 
 profesoriRute
   .route("/professors/:idPredemt/:idProfesor")
-  .get(professorsControllers.getProfessorById)
-  .delete(professorsControllers.deleteProfessor);
+  .get(professorsControllers.getProfessorById);
 
 profesoriRute
   .route("/professorstable")

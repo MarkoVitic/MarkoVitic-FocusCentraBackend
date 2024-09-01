@@ -97,9 +97,10 @@ const updateStudent = async (idUcenik: number, studentData: any) => {
     ocjenaDva,
     ocjenaTri,
     ocjenaCetiri,
-    idPredmet,
+
     ukupnoPlacenoDoSada,
     popust,
+    idProfesoriPredmeti,
   } = studentData;
 
   const query = `
@@ -113,9 +114,10 @@ const updateStudent = async (idUcenik: number, studentData: any) => {
       ocjenaDva = ?, 
       ocjenaTri = ?, 
       ocjenaCetiri = ?, 
-      idPredmet = ?, 
+     
       ukupnoPlacenoDoSada = ?, 
       popust = ?,
+       idProfesoriPredmeti=?,
       azurirano = CURRENT_TIMESTAMP
     WHERE idUcenik = ?
   `;
@@ -129,9 +131,10 @@ const updateStudent = async (idUcenik: number, studentData: any) => {
     ocjenaDva,
     ocjenaTri,
     ocjenaCetiri,
-    idPredmet,
+
     ukupnoPlacenoDoSada,
     popust,
+    idProfesoriPredmeti,
     idUcenik,
   ];
 

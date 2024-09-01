@@ -7,4 +7,8 @@ professorSubjectRouting
   .route("/professorSubject")
   .post(professorSubjectController.createProfessorSubjectRelation);
 
+professorSubjectRouting
+  .route("/professorSubjects/:idProfesoriPredmeti")
+  .delete(professorSubjectController.deleteProfessorSubjectRelation);
+
 export default professorSubjectRouting;

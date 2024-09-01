@@ -82,6 +82,7 @@ const deleteProfessor = async (idProfessor: number) => {
     const affectedRows = await professorsRepository.deleteProfessor(
       idProfessor
     );
+    console.log(affectedRows);
 
     if (affectedRows > 0) {
       return { success: true, message: "Professor deleted successfully" };

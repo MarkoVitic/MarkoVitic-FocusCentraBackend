@@ -37,15 +37,11 @@ const editProcenatProfessorSubject = async (
   }
 };
 
-const deleteProfessorSubjectRelation = async (
-  idProfesor: number,
-  idSubject: number
-) => {
+const deleteProfessorSubjectRelation = async (idProfesoriPredmeti: number) => {
   try {
     const data =
       await professorsSubjectsRepository.deleteProfessorSubjectRelation(
-        idProfesor,
-        idSubject
+        idProfesoriPredmeti
       );
     return data;
   } catch (err: any) {

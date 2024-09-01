@@ -39,20 +39,26 @@ const editProcenatProfessorSubject = async (
   }
 };
 
-const deleteProfessorSubjectRelation = async (
-  idProfesor: number,
-  idSubject: number
-) => {
-  const quer = `DELETE FROM profesori_predmeti
-  WHERE idProfesor = ? AND idPredmet = ?
+const deleteProfessorSubjectRelation = async (idProfesoriPredmeti: number) => {
+  const query = `
+    DELETE FROM profesori_predmeti
+    WHERE idProfesoriPredmeti = ?
   `;
-  const value = [idProfesor, idSubject];
+  const values = [idProfesoriPredmeti];
+
   try {
-    const result = await dbConnection.query(quer, value);
-    return result.affectedRows;
+    const result = await dbConnection.query(query, values);
+
+    // Check if any rows were affected (i.e., a row was successfully deleted)
+    if (result.affectedRows > 0) {
+      return { success: true, affectedRows: result.affectedRows };
+    } else {
+      return { success: false, message: "No matching record found to delete" };
+    }
   } catch (err: any) {
+    // Handle the error and return a meaningful error message
     throw new Error(
-      `Error deliting from professor-subject relation: ${err.message}`
+      `Error deleting from professor-subject relation: ${err.message}`
     );
   }
 };

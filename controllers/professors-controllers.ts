@@ -104,24 +104,16 @@ const updateProfessor = async (req: Request, res: Response) => {
 // delete a professor by ID
 const deleteProfessor = async (req: Request, res: Response) => {
   try {
-    const { idPredemt, idProfesor } = req.params;
-    console.log(idPredemt, idProfesor);
-    const deleteFromProfessorSubject =
-      await professorSubjectService.deleteProfessorSubjectRelation(
-        parseInt(idProfesor),
-        parseInt(idPredemt)
-      );
-    if (deleteFromProfessorSubject) {
-      const result = await professorsService.deleteProfessor(
-        parseInt(idProfesor)
-      );
+    const idPredemt = req.params.id;
+    console.log(idPredemt);
 
-      if (result.success) {
-        res.status(200).send(result); // 200 OK
-        return result;
-      } else {
-        res.status(404).send(result); // 404 Not Found
-      }
+    const result = await professorsService.deleteProfessor(parseInt(idPredemt));
+
+    if (result.success) {
+      res.status(200).send(result); // 200 OK
+      return result;
+    } else {
+      res.status(404).send(result); // 404 Not Found
     }
   } catch (err: any) {
     res.status(500).send({

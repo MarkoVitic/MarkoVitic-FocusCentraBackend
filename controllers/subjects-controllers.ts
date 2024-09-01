@@ -125,19 +125,20 @@ const deleteSubject = async (req: Request, res: Response) => {
   try {
     const { id, idProfesor } = req.params;
     console.log(id, idProfesor);
-    const deleteFromProfessorSubject =
-      await professorSubjectService.deleteProfessorSubjectRelation(
-        parseInt(idProfesor),
-        parseInt(id)
-      );
-    if (deleteFromProfessorSubject) {
-      const result = await subjectService.deleteSubject(Number(id));
 
-      if (result.success) {
-        res.status(200).json(result); // 200 OK
-      } else {
-        res.status(404).json(result); // 404 Not Found
-      }
+    // const deleteFromProfessorSubject =
+    //   await professorSubjectService.deleteProfessorSubjectRelation(
+    //     parseInt(idProfesor),
+    //     parseInt(id)
+    //   );
+
+    const result = await subjectService.deleteSubject(Number(id));
+
+    if (result.success) {
+      res.status(200).json(result); // 200 OK
+      return result;
+    } else {
+      res.status(404).json(result); // 404 Not Found
     }
   } catch (err: any) {
     res.status(500).json({
