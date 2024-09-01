@@ -105,7 +105,6 @@ const updateProfessor = async (req: Request, res: Response) => {
 const deleteProfessor = async (req: Request, res: Response) => {
   try {
     const idPredemt = req.params.id;
-    console.log(idPredemt);
 
     const result = await professorsService.deleteProfessor(parseInt(idPredemt));
 
@@ -140,12 +139,12 @@ const inserIntoMonthPlacanja = async (
   }
 };
 const inserAllSumIntoPlacanja = async (
-  idProfesor: number,
+  idProfesoriPredmeti: number,
   ukupniPrihod: number
 ) => {
   try {
     const data = await professorsService.inserAllSumIntoPlacanja(
-      idProfesor,
+      idProfesoriPredmeti,
       ukupniPrihod
     );
 

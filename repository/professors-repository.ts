@@ -158,7 +158,7 @@ const deleteProfessor = async (idProfessor: number) => {
 
   try {
     const result = await dbConnection.query(query, [idProfessor]);
-    console.log(result);
+
     return result.affectedRows; // Returns the number of rows affected (should be 1 if successful)
   } catch (err: any) {
     throw new Error(`Error deleting professor: ${err.message}`);
@@ -168,16 +168,15 @@ const deleteProfessor = async (idProfessor: number) => {
 // Sluzi sa update klone koliko profesor treba da prili za trenutni mjesec
 
 const inserIntoMonthPlacanja = async (
-  idProfesor: number,
+  idProfesoriPredmeti: number,
   mjescniPrihod: number
 ) => {
   try {
-    console.log(mjescniPrihod, idProfesor);
     const query = await dbConnection.query(
-      `UPDATE profesori 
-      SET prihodMjesecniProfesor = ? 
-      WHERE idProfesor = ? `,
-      [mjescniPrihod, idProfesor]
+      ` UPDATE profesori_predmeti 
+    SET mjesecniPrihod = ? 
+    WHERE idProfesoriPredmeti = ? `,
+      [mjescniPrihod, idProfesoriPredmeti]
     );
     return query;
   } catch (err: any) {
@@ -185,15 +184,15 @@ const inserIntoMonthPlacanja = async (
   }
 };
 const inserAllSumIntoPlacanja = async (
-  idProfesor: number,
+  idProfesoriPredmeti: number,
   ukupniPrihod: number
 ) => {
   try {
     const query = await dbConnection.query(
-      `UPDATE profesori 
-      SET prihodUkupni = ? 
-      WHERE idProfesor = ?`,
-      [ukupniPrihod, idProfesor]
+      `UPDATE profesori_predmeti  
+      SET ukupniPrihod = ? 
+      WHERE idProfesoriPredmeti = ?`,
+      [ukupniPrihod, idProfesoriPredmeti]
     );
     return query;
   } catch (err: any) {

@@ -31,7 +31,17 @@ LEFT JOIN profesori prof ON pp.idProfesor = prof.idProfesor;
 
 // Function to get a single student by ID
 const getStudentById = async (idUcenik: number) => {
-  const query = "SELECT * FROM ucenici WHERE idUcenik = ?";
+  const query = `
+  
+   SELECT u.*, pp.idProfesoriPredmeti, pp.idPredmet, pp.idProfesor, p.nazivPredmeta,prof.ImePrezimeProfesor,p.ukupnaCijenaPrograma
+   FROM ucenici u
+   LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = u.idProfesoriPredmeti
+   LEFT JOIN predmeti p ON pp.idPredmet = p.idPredmet
+   LEFT JOIN profesori prof ON pp.idProfesor = prof.idProfesor
+   WHERE u.idUcenik = ?
+  
+  
+  `;
 
   try {
     const student = await dbConnection.query(query, [idUcenik]);
@@ -164,8 +174,12 @@ const inertIntoStudentTotalPayments = async (ukupnaSuma: any) => {
       `
       UPDATE ucenici 
         SET ukupnoPlacenoDoSada = ? 
-        WHERE idUcenik = ? AND idPredmet = ? `,
-      [ukupnaSuma.sveUplateUcenika, ukupnaSuma.idUcenik, ukupnaSuma.idPredmet]
+        WHERE idUcenik = ? AND idProfesoriPredmeti = ? `,
+      [
+        ukupnaSuma.sveUplateUcenika,
+        ukupnaSuma.idUcenik,
+        ukupnaSuma.idProfesoriPredmeti,
+      ]
     );
     return sumOfAllStudentPayments;
   } catch (err: any) {

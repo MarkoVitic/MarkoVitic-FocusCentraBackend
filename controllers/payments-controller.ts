@@ -50,13 +50,17 @@ const createPayment = async (req: Request, res: Response) => {
     const result = await paymentsService.createPayment(paymentData);
 
     // Pozivanje f-je za racunanje procenta profesora za trenutni mjesec
-    getSumForMonthProfesor(paymentData.idPredmet, paymentData.idProfesor);
+    getSumForMonthProfesor(paymentData.idProfesoriPredmeti);
 
-    //Pozivanje f-je i razunanje za ukupnu sumu i upisuje u prof tableu
-    getSumForProfesor(paymentData.idPredmet, paymentData.idProfesor);
+    //Pozivanje f-je i razunanje za ukupnu sumu i upisuje u profPredemt tableu
+
+    getSumForProfesor(paymentData.idProfesoriPredmeti);
 
     //Pozivanje f-je za racunaje svih upalta Ucenika Za odgovarajuci predmet
-    getSumForStudentPayments(paymentData.idUcenik, paymentData.idPredmet);
+    getSumForStudentPayments(
+      paymentData.idUcenik,
+      paymentData.idProfesoriPredmeti
+    );
 
     if (result.success) {
       res.status(201).json(result); // 201 Created
@@ -117,18 +121,14 @@ const deletePayment = async (req: Request, res: Response) => {
   }
 };
 
-const getSumForMonthProfesor = async (
-  idPredmet: number,
-  idProfesor: number
-) => {
+const getSumForMonthProfesor = async (idProfesoriPredmeti: number) => {
   try {
     const sumMntfProfesor = await paymentsService.getSumForMonthProfesor(
-      idPredmet,
-      idProfesor
+      idProfesoriPredmeti
     );
 
     professorsControllers.inserIntoMonthPlacanja(
-      sumMntfProfesor[0].idProfesor,
+      sumMntfProfesor[0].idProfesoriPredmeti,
       parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
     );
   } catch (err: any) {
@@ -139,15 +139,14 @@ const getSumForMonthProfesor = async (
     };
   }
 };
-const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
+const getSumForProfesor = async (idProfesoriPredmeti: number) => {
   try {
     const sumMntfProfesor = await paymentsService.getSumForProfesor(
-      idPredmet,
-      idProfesor
+      idProfesoriPredmeti
     );
 
     professorsControllers.inserAllSumIntoPlacanja(
-      sumMntfProfesor[0].idProfesor,
+      sumMntfProfesor[0].idProfesoriPredmeti,
       parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
     );
   } catch (err: any) {
@@ -161,11 +160,14 @@ const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
 
 const getSumForStudentPayments = async (
   idUcenik: number,
-  idPredmet: number
+  idProfesoriPredmeti: number
 ) => {
   try {
     const sumForStudentPayments =
-      await paymentsService.getSumForStudentPayments(idUcenik, idPredmet);
+      await paymentsService.getSumForStudentPayments(
+        idUcenik,
+        idProfesoriPredmeti
+      );
 
     return studentsController.inertIntoStudentTotalPayments(
       sumForStudentPayments[0]

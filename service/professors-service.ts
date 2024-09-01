@@ -82,7 +82,6 @@ const deleteProfessor = async (idProfessor: number) => {
     const affectedRows = await professorsRepository.deleteProfessor(
       idProfessor
     );
-    console.log(affectedRows);
 
     if (affectedRows > 0) {
       return { success: true, message: "Professor deleted successfully" };
@@ -98,12 +97,12 @@ const deleteProfessor = async (idProfessor: number) => {
 };
 
 const inserIntoMonthPlacanja = async (
-  idProfesor: number,
+  idProfesoriPredmeti: number,
   mjescniPrihod: number
 ) => {
   try {
     const data = await professorsRepository.inserIntoMonthPlacanja(
-      idProfesor,
+      idProfesoriPredmeti,
       mjescniPrihod
     );
 
@@ -117,12 +116,12 @@ const inserIntoMonthPlacanja = async (
 };
 
 const inserAllSumIntoPlacanja = async (
-  idProfesor: number,
+  idProfesoriPredmeti: number,
   ukupniPrihod: number
 ) => {
   try {
     const data = await professorsRepository.inserAllSumIntoPlacanja(
-      idProfesor,
+      idProfesoriPredmeti,
       ukupniPrihod
     );
     return data;

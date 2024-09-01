@@ -91,14 +91,10 @@ const deletePayment = async (idPlacanje: number) => {
   }
 };
 
-const getSumForMonthProfesor = async (
-  idPredmet: number,
-  idProfesor: number
-) => {
+const getSumForMonthProfesor = async (idProfesoriPredmeti: number) => {
   try {
     const getSumMonth = await paymentsRepository.getSumForMonthProfesor(
-      idPredmet,
-      idProfesor
+      idProfesoriPredmeti
     );
 
     return getSumMonth;
@@ -110,11 +106,10 @@ const getSumForMonthProfesor = async (
   }
 };
 
-const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
+const getSumForProfesor = async (idProfesoriPredmeti: number) => {
   try {
     const getSumMonth = await paymentsRepository.getSumForProfesor(
-      idPredmet,
-      idProfesor
+      idProfesoriPredmeti
     );
 
     return getSumMonth;
@@ -128,11 +123,14 @@ const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
 
 const getSumForStudentPayments = async (
   idUcenik: number,
-  idPredmet: number
+  idProfesoriPredmeti: number
 ) => {
   try {
     const sumForStudentPayments =
-      await paymentsRepository.getSumForStudentPayments(idUcenik, idPredmet);
+      await paymentsRepository.getSumForStudentPayments(
+        idUcenik,
+        idProfesoriPredmeti
+      );
     return sumForStudentPayments;
   } catch (err: any) {
     return {

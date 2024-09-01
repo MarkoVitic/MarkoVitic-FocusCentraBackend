@@ -3,10 +3,13 @@ import { dbConnection } from "../common/db-conection"; // Import your database c
 // Function to retrieve payments with additional data
 const getAllPayments = async () => {
   const query = `
-     select p.*, u.ImePrezimeUcenika, pr.nazivPredmeta
-    from placanja p, ucenici u, predmeti pr
-    where p.idUcenik=u.idUcenik and p.idPredmet=u.idPredmet
-    and u.idPredmet=pr.idPredmet ;
+      SELECT pl.*,pp.idProfesor,pp.idPredmet,u.idUcenik,u.ImePrezimeUcenika,p.nazivPredmeta,prof.ImePrezimeProfesor
+   FROM placanja pl
+   LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = pl.idProfesoriPredmeti
+   LEFT JOIN ucenici u ON pl.idUcenik = u.idUcenik
+   LEFT JOIN predmeti p ON p.idPredmet = pp.idPredmet
+   LEFT JOIN profesori prof ON prof.idProfesor = pp.idProfesor
+   ;
   `; // Bind the start and end date for the query
 
   try {
@@ -31,16 +34,15 @@ const getPaymentById = async (idPlacanje: number) => {
 
 // Function to create a new payment
 const createPayment = async (paymentData: any) => {
-  const { iznosUplate, kreirano, azurirano, idUcenik, idPredmet, idProfesor } =
-    paymentData;
+  const { iznosUplate, idUcenik, idProfesoriPredmeti } = paymentData;
 
   const query = `
     INSERT INTO placanja 
-    (   iznosUplate, kreirano, azurirano, idUcenik, idPredmet,idProfesor) 
-    VALUES (?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?, ?)
+    (iznosUplate, idUcenik, idProfesoriPredmeti, kreirano, azurirano) 
+    VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `;
 
-  const values = [iznosUplate, idUcenik, idPredmet, idProfesor];
+  const values = [iznosUplate, idUcenik, idProfesoriPredmeti];
 
   try {
     const result = await dbConnection.query(query, values);
@@ -50,20 +52,16 @@ const createPayment = async (paymentData: any) => {
   }
 };
 
-const getSumForMonthProfesor = async (
-  idPredmet: number,
-  idProfesor: number
-) => {
+const getSumForMonthProfesor = async (idProfesoriPredmeti: number) => {
   try {
     const sumFromMonth = await dbConnection.query(
-      ` SELECT idProfesor, SUM(iznosUplate) AS prihodMjesecniProfesor
+      ` SELECT idProfesoriPredmeti, SUM(iznosUplate) AS prihodMjesecniProfesor
 FROM placanja
-WHERE idPredmet = ? 
-  AND idProfesor = ?  
+WHERE  idProfesoriPredmeti = ?  
   AND MONTH(kreirano) = MONTH(CURRENT_DATE())
   AND YEAR(kreirano) = YEAR(CURRENT_DATE())
-GROUP BY idProfesor;`,
-      [idPredmet, idProfesor]
+GROUP BY idProfesoriPredmeti;`,
+      [idProfesoriPredmeti]
     );
 
     return sumFromMonth;
@@ -72,14 +70,14 @@ GROUP BY idProfesor;`,
   }
 };
 
-const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
+const getSumForProfesor = async (idProfesoriPredmeti: number) => {
   try {
     const sumFromMonth = await dbConnection.query(
-      ` SELECT idProfesor, SUM(iznosUplate) AS prihodMjesecniProfesor
+      ` SELECT idProfesoriPredmeti, SUM(iznosUplate) AS prihodMjesecniProfesor
   FROM placanja
-  WHERE idPredmet = ? and idProfesor = ?
-  GROUP BY idProfesor;`,
-      [idPredmet, idProfesor]
+  WHERE idProfesoriPredmeti = ?
+  GROUP BY idProfesoriPredmeti;`,
+      [idProfesoriPredmeti]
     );
 
     return sumFromMonth;
@@ -90,16 +88,16 @@ const getSumForProfesor = async (idPredmet: number, idProfesor: number) => {
 
 const getSumForStudentPayments = async (
   idUcenik: number,
-  idPredmet: number
+  idProfesoriPredmeti: number
 ) => {
   try {
     const sumForStudentPayments = await dbConnection.query(
       `
-      SELECT idUcenik, idPredmet, SUM(iznosUplate) AS sveUplateUcenika
+      SELECT idUcenik, idProfesoriPredmeti, SUM(iznosUplate) AS sveUplateUcenika
   FROM placanja
-  WHERE idUcenik = ? and idPredmet = ?
+  WHERE idUcenik = ? and idProfesoriPredmeti = ?
   GROUP BY idUcenik;`,
-      [idUcenik, idPredmet]
+      [idUcenik, idProfesoriPredmeti]
     );
     return sumForStudentPayments;
   } catch (err: any) {
