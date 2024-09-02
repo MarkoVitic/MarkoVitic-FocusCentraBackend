@@ -6,7 +6,7 @@ const createProfessorSubjectRelation = async (professorSubjectData: any) => {
       await professorsSubjectsRepository.createProfessorSubjectRelation(
         professorSubjectData
       );
-    console.log(data);
+
     return data;
   } catch (err: any) {
     return {

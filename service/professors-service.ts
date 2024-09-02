@@ -2,15 +2,27 @@ import professorsRepository from "../repository/professors-repository";
 import professorsRepositori from "../repository/professors-repository";
 
 const getAllProfessors = async () => {
-  const allProfessors = await professorsRepository.getAllProfessors();
+  try {
+    const allProfessors = await professorsRepository.getAllProfessors();
 
-  return allProfessors;
+    //Zarada profesora za mjesec i ukupno koliko su zaradili od pocetka
+    allProfessors.forEach((element: any) => {
+      element.mjesecniPrihod =
+        (element.mjesecniPrihod * element.procenat) / 100;
+      element.ukupniPrihod = (element.ukupniPrihod * element.procenat) / 100;
+    });
+
+    return allProfessors;
+  } catch (err) {
+    return { success: false, msg: err };
+  }
 };
 
 const getAllProfesorsFromProfessorsTable = async () => {
   try {
     const data =
       await professorsRepository.getAllProfesorsFromProfessorsTable();
+
     return data;
   } catch (err) {
     return { success: false, msg: err };

@@ -7,7 +7,7 @@ const createProfessorSubjectRelation = async (req: Request, res: Response) => {
     const data = await professorSubjectService.createProfessorSubjectRelation(
       professorSubjectData
     );
-    console.log(data);
+
     return res.send(data);
   } catch (err: any) {
     res.status(500).json({
