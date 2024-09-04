@@ -9,7 +9,10 @@ paymentsRute
 paymentsRute
   .route("/payments/:id")
   .get(paymentsControllers.getPaymentById)
-  .delete(paymentsControllers.deletePayment)
   .put(paymentsControllers.updatePayment);
+
+paymentsRute
+  .route("/payments/:id/:idProfPred/:idUcenik")
+  .delete(paymentsControllers.deletePayment);
 
 export default paymentsRute;

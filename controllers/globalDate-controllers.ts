@@ -2,6 +2,19 @@ import globalDateService from "../service/globalDate-service";
 
 import { Request, Response } from "express";
 
+const getAllDates = async (req: Request, res: Response) => {
+  try {
+    const data = await globalDateService.getAllDates();
+    res.send(data);
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
 const createDate = async (req: Request, res: Response) => {
   let date = req.body;
   try {
@@ -43,4 +56,4 @@ const deleteDate = async (req: Request, res: Response) => {
   }
 };
 
-export default { createDate, updateDate, deleteDate };
+export default { createDate, updateDate, deleteDate, getAllDates };

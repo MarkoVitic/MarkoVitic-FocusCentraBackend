@@ -3,7 +3,10 @@ import globalDateControllers from "../controllers/globalDate-controllers";
 
 const globalDateRouting = express.Router();
 
-globalDateRouting.route("/globalDate").post(globalDateControllers.createDate);
+globalDateRouting
+  .route("/globalDate")
+  .post(globalDateControllers.createDate)
+  .get(globalDateControllers.getAllDates);
 
 globalDateRouting
   .route("/globalDate/:id")

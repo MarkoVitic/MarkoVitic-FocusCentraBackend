@@ -50,14 +50,14 @@ const createPayment = async (req: Request, res: Response) => {
     const result = await paymentsService.createPayment(paymentData);
 
     // Pozivanje f-je za racunanje procenta profesora za trenutni mjesec
-    getSumForMonthProfesor(paymentData.idProfesoriPredmeti);
+    await getSumForMonthProfesor(paymentData.idProfesoriPredmeti);
 
     //Pozivanje f-je i razunanje za ukupnu sumu i upisuje u profPredemt tableu
 
-    getSumForProfesor(paymentData.idProfesoriPredmeti);
+    await getSumForProfesor(paymentData.idProfesoriPredmeti);
 
     //Pozivanje f-je za racunaje svih upalta Ucenika Za odgovarajuci predmet
-    getSumForStudentPayments(
+    await getSumForStudentPayments(
       paymentData.idUcenik,
       paymentData.idProfesoriPredmeti
     );
@@ -105,9 +105,16 @@ const updatePayment = async (req: Request, res: Response) => {
 const deletePayment = async (req: Request, res: Response) => {
   try {
     const idPlacanje = req.params.id;
+    const idProfPred = req.params.idProfPred;
+    const idUcenik = req.params.idUcenik;
+
     const result = await paymentsService.deletePayment(Number(idPlacanje));
 
     if (result.success) {
+      // Wait for each async function to finish
+      await getSumForMonthProfesor(parseInt(idProfPred));
+      await getSumForProfesor(parseInt(idProfPred));
+      await getSumForStudentPayments(parseInt(idUcenik), parseInt(idProfPred));
       res.status(200).json(result); // 200 OK
     } else {
       res.status(404).json(result); // 404 Not Found
@@ -127,10 +134,21 @@ const getSumForMonthProfesor = async (idProfesoriPredmeti: number) => {
       idProfesoriPredmeti
     );
 
-    professorsControllers.inserIntoMonthPlacanja(
-      sumMntfProfesor[0].idProfesoriPredmeti,
-      parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
-    );
+    if (sumMntfProfesor.length === 0) {
+      await professorsControllers.inserIntoMonthPlacanja(
+        idProfesoriPredmeti,
+        0
+      );
+    } else {
+      const prihodMjesecniProfesor = parseInt(
+        sumMntfProfesor[0].prihodMjesecniProfesor
+      );
+
+      await professorsControllers.inserIntoMonthPlacanja(
+        sumMntfProfesor[0].idProfesoriPredmeti,
+        prihodMjesecniProfesor
+      );
+    }
   } catch (err: any) {
     return {
       success: false,
@@ -145,10 +163,23 @@ const getSumForProfesor = async (idProfesoriPredmeti: number) => {
       idProfesoriPredmeti
     );
 
-    professorsControllers.inserAllSumIntoPlacanja(
-      sumMntfProfesor[0].idProfesoriPredmeti,
-      parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
-    );
+    // If the array is empty, insert a value of 0
+    if (sumMntfProfesor.length === 0) {
+      await professorsControllers.inserAllSumIntoPlacanja(
+        idProfesoriPredmeti,
+        0
+      );
+    } else {
+      // Otherwise, insert the actual value
+      const prihodMjesecniProfesor = parseInt(
+        sumMntfProfesor[0].prihodMjesecniProfesor
+      );
+
+      await professorsControllers.inserAllSumIntoPlacanja(
+        sumMntfProfesor[0].idProfesoriPredmeti,
+        prihodMjesecniProfesor
+      );
+    }
   } catch (err: any) {
     return {
       success: false,
@@ -157,6 +188,25 @@ const getSumForProfesor = async (idProfesoriPredmeti: number) => {
     };
   }
 };
+
+// const getSumForProfesor = async (idProfesoriPredmeti: number) => {
+//   try {
+//     const sumMntfProfesor = await paymentsService.getSumForProfesor(
+//       idProfesoriPredmeti
+//     );
+
+//     professorsControllers.inserAllSumIntoPlacanja(
+//       sumMntfProfesor[0].idProfesoriPredmeti,
+//       parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
+//     );
+//   } catch (err: any) {
+//     return {
+//       success: false,
+//       message: "Internal Server Error",
+//       error: err.message,
+//     };
+//   }
+// };
 
 const getSumForStudentPayments = async (
   idUcenik: number,
@@ -169,9 +219,22 @@ const getSumForStudentPayments = async (
         idProfesoriPredmeti
       );
 
-    return studentsController.inertIntoStudentTotalPayments(
-      sumForStudentPayments[0]
-    );
+    // If the array is empty, insert 0 as the total payments for the student
+    if (sumForStudentPayments.length === 0) {
+      let values = {
+        sveUplateUcenika: 0,
+        idUcenik: idUcenik,
+        idProfesoriPredmeti: idProfesoriPredmeti,
+      };
+
+      return await studentsController.inertIntoStudentTotalPayments(values);
+    } else {
+      // Insert the actual total payments if data is returned
+
+      return await studentsController.inertIntoStudentTotalPayments(
+        sumForStudentPayments[0]
+      );
+    }
   } catch (err: any) {
     return {
       success: false,
@@ -180,6 +243,29 @@ const getSumForStudentPayments = async (
     };
   }
 };
+
+// const getSumForStudentPayments = async (
+//   idUcenik: number,
+//   idProfesoriPredmeti: number
+// ) => {
+//   try {
+//     const sumForStudentPayments =
+//       await paymentsService.getSumForStudentPayments(
+//         idUcenik,
+//         idProfesoriPredmeti
+//       );
+
+//     return studentsController.inertIntoStudentTotalPayments(
+//       sumForStudentPayments[0]
+//     );
+//   } catch (err: any) {
+//     return {
+//       success: false,
+//       message: "Internal Server Error",
+//       error: err.message,
+//     };
+//   }}
+
 export default {
   getAllPayments,
   getPaymentById,

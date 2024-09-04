@@ -1,5 +1,14 @@
 import globalDateRepository from "../repository/globalDate-repository";
 
+const getAllDates = async () => {
+  try {
+    const data = await globalDateRepository.getAllDates();
+    return data;
+  } catch (err: any) {
+    return err;
+  }
+};
+
 const createDate = async (date: any) => {
   try {
     const data = await globalDateRepository.createDate(date);
@@ -39,4 +48,4 @@ const deleteDate = async (idDate: number) => {
   }
 };
 
-export default { createDate, updateDate, deleteDate };
+export default { createDate, updateDate, deleteDate, getAllDates };

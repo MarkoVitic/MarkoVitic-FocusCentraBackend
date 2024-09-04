@@ -13,6 +13,7 @@ const getAllProfesorsFromProfessorsTable = async (
 ) => {
   try {
     const data = await professorsService.getAllProfesorsFromProfessorsTable();
+
     res.send(data);
   } catch (err) {
     return { success: false, msg: err };

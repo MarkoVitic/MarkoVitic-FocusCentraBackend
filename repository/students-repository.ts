@@ -67,7 +67,7 @@ const createStudent = async (studentData: any) => {
     popust,
     idProfesoriPredmeti,
   } = studentData;
-  console.log(idProfesoriPredmeti);
+
   const query = `
     INSERT INTO ucenici 
     (ImePrezimeUcenika, ImeRoditelja, kontaktRoditelja, emailRoditelja, ocjenaJedan, ocjenaDva, ocjenaTri, ocjenaCetiri, ukupnoPlacenoDoSada,popust,idProfesoriPredmeti,kreirano, azurirano) 

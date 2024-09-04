@@ -3,7 +3,7 @@ import { dbConnection } from "../common/db-conection"; // Import your database c
 // Function to retrieve payments with additional data
 const getAllPayments = async () => {
   const query = `
-      SELECT pl.*,pp.idProfesor,pp.idPredmet,u.idUcenik,u.ImePrezimeUcenika,p.nazivPredmeta,prof.ImePrezimeProfesor
+      SELECT pl.*,pp.idProfesor,pp.idPredmet,u.idUcenik,u.ImePrezimeUcenika,p.nazivPredmeta,prof.ImePrezimeProfesor,pp.idProfesoriPredmeti
    FROM placanja pl
    LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = pl.idProfesoriPredmeti
    LEFT JOIN ucenici u ON pl.idUcenik = u.idUcenik
@@ -99,6 +99,7 @@ const getSumForStudentPayments = async (
   GROUP BY idUcenik;`,
       [idUcenik, idProfesoriPredmeti]
     );
+
     return sumForStudentPayments;
   } catch (err: any) {
     return { success: false, msg: err };
@@ -136,6 +137,7 @@ const deletePayment = async (idPlacanje: number) => {
 
   try {
     const result = await dbConnection.query(query, [idPlacanje]);
+
     return result.affectedRows; // Return the number of rows affected (should be 1 if successful)
   } catch (err: any) {
     throw new Error(`Error deleting payment: ${err.message}`);

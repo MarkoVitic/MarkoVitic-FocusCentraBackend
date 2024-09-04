@@ -118,7 +118,7 @@ const updateStudent = async (req: Request, res: Response) => {
         ? 0
         : studentData.idProfesoriPredmeti,
     };
-    console.log(newData);
+
     const result = await studentsService.updateStudent(
       Number(idUcenik),
       newData
@@ -159,7 +159,6 @@ const deleteStudent = async (req: Request, res: Response) => {
 };
 
 const inertIntoStudentTotalPayments = async (ukupnaSuma: any) => {
-  console.log(ukupnaSuma + "labud");
   try {
     const sumOfAllStudentPayments =
       await studentsService.inertIntoStudentTotalPayments(ukupnaSuma);
