@@ -31,6 +31,7 @@ const createDate = async (req: Request, res: Response) => {
 
 const updateDate = async (req: Request, res: Response) => {
   let idDate = req.params.id;
+  console.log(idDate);
   try {
     const data = await globalDateService.updateDate(parseInt(idDate));
     res.send(data);
