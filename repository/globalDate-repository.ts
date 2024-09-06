@@ -12,18 +12,12 @@ const getAllDates = async () => {
 
 const createDate = async (date: any) => {
   try {
-    console.log(
-      date.pocetakGodine,
-      date.krajGodine,
-      date.nazivDatuma + "eeeeeeeeeeeeeeeeeeeeee"
-    );
     const data = await dbConnection.query(
       `INSERT INTO globalni_datum (pocetakGodine, krajGodine, nazivDatuma, kreirano, azurirano) 
        VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
       [date.pocetakGodine, date.krajGodine, date.nazivDatuma]
     );
 
-    console.log(data + "ssssss");
     return data;
   } catch (err: any) {
     console.error("Error:", err);
