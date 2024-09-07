@@ -13,9 +13,15 @@ const getAllStudents = async () => {
   }
 };
 
-const getAllStudentsWithSubjectName = async () => {
+const getAllStudentsWithSubjectName = async (
+  startDare: Date,
+  endDate: Date
+) => {
   try {
-    const students = await studentsRepository.getAllStudentsWithSubjectName();
+    const students = await studentsRepository.getAllStudentsWithSubjectName(
+      startDare,
+      endDate
+    );
     students.forEach((element: any) => {
       element.ukupnaCijenaPrograma -= Math.round(
         (element.ukupnaCijenaPrograma * element.popust) / 100

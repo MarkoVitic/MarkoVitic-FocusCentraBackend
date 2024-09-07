@@ -1,22 +1,29 @@
 import { dbConnection } from "../common/db-conection"; // Import your database connection module
 
 // Function to retrieve payments with additional data
-const getAllPayments = async () => {
+const getAllPayments = async (startDate: Date, endDate: Date) => {
+  // Format the dates to YYYY-MM-DD format (removing the time and Z part)
+  const formattedStartDate = startDate.toISOString().split("T")[0];
+  const formattedEndDate = endDate.toISOString().split("T")[0];
+
   const query = `
-      SELECT pl.*,pp.idProfesor,pp.idPredmet,u.idUcenik,u.ImePrezimeUcenika,p.nazivPredmeta,prof.ImePrezimeProfesor,pp.idProfesoriPredmeti
-   FROM placanja pl
-   LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = pl.idProfesoriPredmeti
-   LEFT JOIN ucenici u ON pl.idUcenik = u.idUcenik
-   LEFT JOIN predmeti p ON p.idPredmet = pp.idPredmet
-   LEFT JOIN profesori prof ON prof.idProfesor = pp.idProfesor
-   ;
-  `; // Bind the start and end date for the query
+    SELECT pl.*, pp.idProfesor, pp.idPredmet, u.idUcenik, u.ImePrezimeUcenika, 
+           p.nazivPredmeta, prof.ImePrezimeProfesor, pp.idProfesoriPredmeti
+    FROM placanja pl
+    LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = pl.idProfesoriPredmeti
+    LEFT JOIN ucenici u ON pl.idUcenik = u.idUcenik
+    LEFT JOIN predmeti p ON p.idPredmet = pp.idPredmet
+    LEFT JOIN profesori prof ON prof.idProfesor = pp.idProfesor
+     WHERE DATE(pl.kreirano) BETWEEN ? AND ?
+  `;
+
+  const queryParams = [formattedStartDate, formattedEndDate]; // Parameters for the query
 
   try {
-    const payments = await dbConnection.query(query);
+    const payments = await dbConnection.query(query, queryParams);
     return payments; // Return the retrieved records
   } catch (err: any) {
-    throw new Error(`Error retrieving payments: ${err.message}`);
+    throw new Error(`Error retrieving payments from database: ${err.message}`);
   }
 };
 
@@ -76,8 +83,34 @@ const getSumForProfesor = async (idProfesoriPredmeti: number) => {
       ` SELECT idProfesoriPredmeti, SUM(iznosUplate) AS prihodMjesecniProfesor
   FROM placanja
   WHERE idProfesoriPredmeti = ?
-  GROUP BY idProfesoriPredmeti;`,
+  GROUP BY idProfesoriPredmeti
+  
+  ;`,
       [idProfesoriPredmeti]
+    );
+
+    return sumFromMonth;
+  } catch (err) {
+    return { success: false, msg: err };
+  }
+};
+
+const getSumForProfesorGlobalDate = async (
+  idProfesoriPredmeti: number,
+  startDate: Date,
+  endDate: Date
+) => {
+  const formattedStartDate = startDate.toISOString().split("T")[0];
+  const formattedEndDate = endDate.toISOString().split("T")[0];
+  try {
+    const sumFromMonth = await dbConnection.query(
+      ` SELECT idProfesoriPredmeti, SUM(iznosUplate) AS prihodMjesecniProfesor
+       FROM placanja
+       WHERE idProfesoriPredmeti = ?
+         AND DATE(kreirano) BETWEEN ? AND ?
+       GROUP BY idProfesoriPredmeti;
+  ;`,
+      [idProfesoriPredmeti, formattedStartDate, formattedEndDate]
     );
 
     return sumFromMonth;
@@ -153,4 +186,5 @@ export default {
   getSumForMonthProfesor,
   getSumForProfesor,
   getSumForStudentPayments,
+  getSumForProfesorGlobalDate,
 };

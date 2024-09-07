@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import studentsService from "../service/students-service";
+import globalDateRepository from "../repository/globalDate-repository";
 
 // Controller to get all students
 const getAllStudents = async (req: Request, res: Response) => {
@@ -21,8 +22,16 @@ const getAllStudents = async (req: Request, res: Response) => {
 };
 
 const getAllStudentsWithSubjectName = async (req: Request, res: Response) => {
+  let startDate = req.params.startDate;
+  let endDate = req.params.endDate;
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
   try {
-    const result = await studentsService.getAllStudentsWithSubjectName();
+    const result = await studentsService.getAllStudentsWithSubjectName(
+      start,
+      end
+    );
 
     res.send(result);
   } catch (err: any) {

@@ -12,22 +12,52 @@ const getAllStudents = async () => {
   }
 };
 
-const getAllStudentsWithSubjectName = async () => {
+const getAllStudentsWithSubjectName = async (
+  startDate: Date,
+  endDate: Date
+) => {
+  // Format the dates to YYYY-MM-DD format (removing the time and Z part)
+  const formattedStartDate = startDate.toISOString().split("T")[0];
+  const formattedEndDate = endDate.toISOString().split("T")[0];
+
   try {
-    const query = await dbConnection.query(`
-     SELECT u.*, pp.idProfesoriPredmeti, pp.idPredmet, pp.idProfesor, p.nazivPredmeta,prof.ImePrezimeProfesor,p.ukupnaCijenaPrograma
-FROM ucenici u
-LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = u.idProfesoriPredmeti
-LEFT JOIN predmeti p ON pp.idPredmet = p.idPredmet
-LEFT JOIN profesori prof ON pp.idProfesor = prof.idProfesor;
-    
-      
-    `);
+    const query = await dbConnection.query(
+      `
+       SELECT u.*, pp.idProfesoriPredmeti, pp.idPredmet, pp.idProfesor, 
+              p.nazivPredmeta, prof.ImePrezimeProfesor, p.ukupnaCijenaPrograma
+       FROM ucenici u
+       LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = u.idProfesoriPredmeti
+       LEFT JOIN predmeti p ON pp.idPredmet = p.idPredmet
+       LEFT JOIN profesori prof ON pp.idProfesor = prof.idProfesor
+        WHERE DATE(u.kreirano) BETWEEN ? AND ?
+      `,
+      [formattedStartDate, formattedEndDate]
+    );
     return query;
   } catch (err: any) {
     return err;
   }
 };
+
+// const getAllStudentsWithSubjectName = async (
+//   startDare: Date,
+//   endDate: Date
+// ) => {
+//   try {
+//     const query = await dbConnection.query(
+//       `
+//        SELECT u.*, pp.idProfesoriPredmeti, pp.idPredmet, pp.idProfesor, p.nazivPredmeta,prof.ImePrezimeProfesor,p.ukupnaCijenaPrograma
+//   FROM ucenici u
+//   LEFT JOIN profesori_predmeti pp ON pp.idProfesoriPredmeti = u.idProfesoriPredmeti
+//   LEFT JOIN predmeti p ON pp.idPredmet = p.idPredmet
+//   LEFT JOIN profesori prof ON pp.idProfesor = prof.idProfesor
+// ;`
+//     );
+//     return query;
+//   } catch (err: any) {
+//     return err;
+//   }
+// };
 
 // Function to get a single student by ID
 const getStudentById = async (idUcenik: number) => {

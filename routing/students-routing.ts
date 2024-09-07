@@ -12,7 +12,7 @@ studetsRute
   .delete(studentsControllers.deleteStudent)
   .put(studentsControllers.updateStudent);
 studetsRute
-  .route("/studentsall")
+  .route("/studentsall/:startDate/:endDate")
   .get(studentsControllers.getAllStudentsWithSubjectName);
 
 export default studetsRute;

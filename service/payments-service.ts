@@ -1,9 +1,12 @@
 import paymentsRepository from "../repository/payments-repository";
 
 // Service to get all payments
-const getAllPayments = async () => {
+const getAllPayments = async (startDate: Date, endDate: Date) => {
   try {
-    const payments = await paymentsRepository.getAllPayments();
+    const payments = await paymentsRepository.getAllPayments(
+      startDate,
+      endDate
+    );
     return { success: true, data: payments };
   } catch (err: any) {
     return {
@@ -120,6 +123,26 @@ const getSumForProfesor = async (idProfesoriPredmeti: number) => {
     };
   }
 };
+const getSumForProfesorGlobalDate = async (
+  idProfesoriPredmeti: number,
+  startDate: Date,
+  endDate: Date
+) => {
+  try {
+    const getSumMonth = await paymentsRepository.getSumForProfesorGlobalDate(
+      idProfesoriPredmeti,
+      startDate,
+      endDate
+    );
+
+    return getSumMonth;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error inser into payment: ${err.message}`,
+    };
+  }
+};
 
 const getSumForStudentPayments = async (
   idUcenik: number,
@@ -149,4 +172,5 @@ export default {
   getSumForMonthProfesor,
   getSumForProfesor,
   getSumForStudentPayments,
+  getSumForProfesorGlobalDate,
 };
