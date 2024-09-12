@@ -124,7 +124,6 @@ const updateSubject = async (req: Request, res: Response) => {
 const deleteSubject = async (req: Request, res: Response) => {
   try {
     const { id, idProfesor } = req.params;
-    console.log(id, idProfesor);
 
     // const deleteFromProfessorSubject =
     //   await professorSubjectService.deleteProfessorSubjectRelation(

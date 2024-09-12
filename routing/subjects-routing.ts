@@ -9,14 +9,14 @@ subjetsRute
 subjetsRute
   .route("/subjets/:id")
   .put(subjectsControllers.updateSubject)
-  .get(subjectsControllers.getOnlySubject);
+  .get(subjectsControllers.getOnlySubject)
+  .delete(subjectsControllers.deleteSubject);
 subjetsRute
   .route("/subjetsall")
   .get(subjectsControllers.getAllSubjetsWithProfessors);
 
 subjetsRute
   .route("/subjets/:id/:idProfesor")
-  .get(subjectsControllers.getSubjectById)
-  .delete(subjectsControllers.deleteSubject);
+  .get(subjectsControllers.getSubjectById);
 
 export default subjetsRute;

@@ -167,50 +167,6 @@ const getSumForMonthProfesor = async (idProfesoriPredmeti: number) => {
   }
 };
 
-// const getSumForMonthProfesorGlobalDate = async (
-//   idProfesoriPredmeti: number,
-//   startDate: Date,
-//   endDate: Date
-// ) => {
-//   const start = new Date(startDate);
-//   const end = new Date(endDate);
-//   try {
-//     const sumMntfProfesor = await paymentsService.getSumForProfesorGlobalDate(
-//       idProfesoriPredmeti,
-//       start,
-//       end
-//     );
-
-//     console.log(sumMntfProfesor[0] + "++++++++++++++++++++");
-
-//     if (sumMntfProfesor.length === 0) {
-//       await professorsControllers.inserIntoMonthPlacanja(
-//         idProfesoriPredmeti,
-//         0
-//       );
-//     } else {
-//       console.log(
-//         sumMntfProfesor[0].prihodMjesecniProfesor +
-//           "-------------------------------"
-//       );
-//       const prihodMjesecniProfesor = parseInt(
-//         sumMntfProfesor[0].prihodMjesecniProfesor
-//       );
-
-//       await professorsControllers.inserIntoMonthPlacanja(
-//         sumMntfProfesor[0].idProfesoriPredmeti,
-//         prihodMjesecniProfesor
-//       );
-//     }
-//   } catch (err: any) {
-//     return {
-//       success: false,
-//       message: "Internal Server Error",
-//       error: err.message,
-//     };
-//   }
-// };
-
 const getSumForProfesor = async (idProfesoriPredmeti: number) => {
   try {
     const sumMntfProfesor = await paymentsService.getSumForProfesor(
@@ -283,25 +239,6 @@ const getSumForProfesorGlobalDate = async (
   }
 };
 
-// const getSumForProfesor = async (idProfesoriPredmeti: number) => {
-//   try {
-//     const sumMntfProfesor = await paymentsService.getSumForProfesor(
-//       idProfesoriPredmeti
-//     );
-
-//     professorsControllers.inserAllSumIntoPlacanja(
-//       sumMntfProfesor[0].idProfesoriPredmeti,
-//       parseInt(sumMntfProfesor[0].prihodMjesecniProfesor)
-//     );
-//   } catch (err: any) {
-//     return {
-//       success: false,
-//       message: "Internal Server Error",
-//       error: err.message,
-//     };
-//   }
-// };
-
 const getSumForStudentPayments = async (
   idUcenik: number,
   idProfesoriPredmeti: number
@@ -337,28 +274,6 @@ const getSumForStudentPayments = async (
     };
   }
 };
-
-// const getSumForStudentPayments = async (
-//   idUcenik: number,
-//   idProfesoriPredmeti: number
-// ) => {
-//   try {
-//     const sumForStudentPayments =
-//       await paymentsService.getSumForStudentPayments(
-//         idUcenik,
-//         idProfesoriPredmeti
-//       );
-
-//     return studentsController.inertIntoStudentTotalPayments(
-//       sumForStudentPayments[0]
-//     );
-//   } catch (err: any) {
-//     return {
-//       success: false,
-//       message: "Internal Server Error",
-//       error: err.message,
-//     };
-//   }}
 
 export default {
   getAllPayments,
